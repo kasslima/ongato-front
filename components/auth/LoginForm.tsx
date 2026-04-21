@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -13,17 +13,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { isAuthenticated, login } from "@/lib/auth";
+import { login } from "@/lib/auth";
 
 export default function LoginForm(){
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-
-    useEffect(() => {
-        if (isAuthenticated()) {
-            router.replace("/admin");
-        }
-    }, [router]);
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -31,6 +25,7 @@ export default function LoginForm(){
 
         login();
         router.push("/admin");
+        router.refresh();
     };
 
     return (

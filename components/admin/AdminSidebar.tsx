@@ -1,6 +1,7 @@
 "use client";
 
 import { CalendarDays, Cat, Megaphone, Search, Users } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +28,8 @@ type AdminSidebarProps = {
 };
 
 export default function AdminSidebar({ onLogout }: AdminSidebarProps) {
-  const activePath = typeof window === "undefined" ? "" : window.location.pathname;
+  const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <Sidebar>
@@ -46,8 +48,8 @@ export default function AdminSidebar({ onLogout }: AdminSidebarProps) {
                 <SidebarMenuItem key={item.key}>
                   <SidebarMenuButton
                     type="button"
-                    isActive={activePath === item.href}
-                    onClick={() => window.location.assign(item.href)}
+                    isActive={pathname === item.href}
+                    onClick={() => router.push(item.href)}
                     icon={renderSidebarIcon(item.key)}
                     title={item.label}
                   >
