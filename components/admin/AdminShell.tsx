@@ -17,7 +17,6 @@ export default function AdminShell({ children }: AdminShellProps) {
   const handleLogout = () => {
     logout();
     router.replace("/auth/login");
-    // Força o reload para limpar os caches do Next.js e passar pelo middleware novamente
     router.refresh();
   };
 
