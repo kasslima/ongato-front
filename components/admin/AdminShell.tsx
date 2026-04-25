@@ -1,45 +1,25 @@
 'use client'
 
-import { ReactNode, useEffect, useSyncExternalStore } from "react";
+import { ReactNode } from "react";
+import { useRouter } from "next/navigation";
 
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import {
-  getAuthServerSnapshot,
-  isAuthenticated,
-  logout,
-  subscribeAuthChange,
-} from "@/lib/auth";
+import { logout } from "@/lib/auth";
 
 type AdminShellProps = {
   children: ReactNode;
 };
 
 export default function AdminShell({ children }: AdminShellProps) {
-  const authenticated = useSyncExternalStore(
-    subscribeAuthChange,
-    isAuthenticated,
-    getAuthServerSnapshot
-  );
-
-  useEffect(() => {
-    if (!authenticated) {
-      window.location.replace("/auth/login");
-    }
-  }, [authenticated]);
+  const router = useRouter();
 
   const handleLogout = () => {
     logout();
-    window.location.replace("/auth/login");
+    router.replace("/auth/login");
+    // Força o reload para limpar os caches do Next.js e passar pelo middleware novamente
+    router.refresh();
   };
-
-  if (!authenticated) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-[#f5f1e8] p-6">
-        <p className="text-sm text-neutral-600">Verificando acesso administrativo...</p>
-      </main>
-    );
-  }
 
   return (
     <SidebarProvider>
@@ -48,3 +28,4 @@ export default function AdminShell({ children }: AdminShellProps) {
     </SidebarProvider>
   );
 }
+
