@@ -1,4 +1,5 @@
 import SimpleCrud from "@/components/admin/crud/SimpleCrud";
+import { AnimaisFilter } from "@/components/admin/crud/CrudFilters";
 
 export default function AnimaisPage() {
   return (
@@ -6,6 +7,7 @@ export default function AnimaisPage() {
       title="Animais"
       description="Gerencie os animais cadastrados para adocao e acompanhamento."
       itemLabel="animais"
+      filterComponent={<AnimaisFilter />}
       fields={[
         { key: "nome", label: "Nome", placeholder: "Ex: Mingau" },
         { key: "especie", label: "Especie", placeholder: "Ex: Gato" },

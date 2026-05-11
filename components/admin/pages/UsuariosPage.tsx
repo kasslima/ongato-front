@@ -1,4 +1,5 @@
 import SimpleCrud from "@/components/admin/crud/SimpleCrud";
+import { UsuariosFilter } from "@/components/admin/crud/CrudFilters";
 
 export default function UsuariosPage() {
   return (
@@ -6,6 +7,7 @@ export default function UsuariosPage() {
       title="Usuarios"
       description="Controle os acessos administrativos e permissoes da equipe."
       itemLabel="usuarios"
+      filterComponent={<UsuariosFilter />}
       fields={[
         { key: "nome", label: "Nome", placeholder: "Ex: Maria" },
         { key: "email", label: "E-mail", placeholder: "Ex: maria@email.com" },

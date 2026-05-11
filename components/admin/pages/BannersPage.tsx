@@ -1,4 +1,5 @@
 import SimpleCrud from "@/components/admin/crud/SimpleCrud";
+import { BannersFilter } from "@/components/admin/crud/CrudFilters";
 
 export default function BannersPage() {
   return (
@@ -6,6 +7,7 @@ export default function BannersPage() {
       title="Banners"
       description="Atualize os banners exibidos nas paginas publicas do site."
       itemLabel="banners"
+      filterComponent={<BannersFilter />}
       fields={[
         { key: "titulo", label: "Titulo", placeholder: "Ex: Campanha de Inverno" },
         { key: "posicao", label: "Posicao", placeholder: "Ex: Home Topo" },

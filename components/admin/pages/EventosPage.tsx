@@ -1,4 +1,5 @@
 import SimpleCrud from "@/components/admin/crud/SimpleCrud";
+import { EventosFilter } from "@/components/admin/crud/CrudFilters";
 
 export default function EventosPage() {
   return (
@@ -6,6 +7,7 @@ export default function EventosPage() {
       title="Eventos"
       description="Organize campanhas, feiras e atividades do instituto."
       itemLabel="eventos"
+      filterComponent={<EventosFilter />}
       fields={[
         { key: "titulo", label: "Titulo", placeholder: "Ex: Feira de Adocao" },
         { key: "data", label: "Data", placeholder: "Ex: 30/04/2026" },
