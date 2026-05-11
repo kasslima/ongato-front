@@ -3,13 +3,17 @@
 import { useEffect, useState } from "react";
 import SimpleCrud from "@/components/admin/crud/SimpleCrud";
 import { AnimaisFilter } from "@/components/admin/crud/CrudFilters";
-import { getAnimals, deleteAnimal } from "@/lib/animals";
+import { getAnimals, deleteAnimal, createAnimal, updateAnimal } from "@/lib/animals";
 import { Animal } from "@/components/admin/animais-types";
+import { AnimalModal } from "../AnimalModal";
 
 export default function AnimaisPage() {
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<{ name?: string; type?: "gato" | "cachorro" }>({});
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingAnimal, setEditingAnimal] = useState<Animal | null>(null);
 
   const fetchAnimals = async () => {
     try {
@@ -37,6 +41,25 @@ export default function AnimaisPage() {
     }
   };
 
+  const handleOpenCreate = () => {
+    setEditingAnimal(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (animal: Animal) => {
+    setEditingAnimal(animal);
+    setIsModalOpen(true);
+  };
+
+  const handleSubmit = async (data: FormData | Record<string, any>) => {
+    if (editingAnimal) {
+      await updateAnimal(editingAnimal.id, data);
+    } else {
+      await createAnimal(data as FormData);
+    }
+    fetchAnimals();
+  };
+
   const crudItems = animals.map((a) => ({
     id: a.id.toString(),
     values: {
@@ -49,25 +72,34 @@ export default function AnimaisPage() {
   }));
 
   return (
-    <SimpleCrud
-      title="Animais"
-      description="Gerencie os animais cadastrados para adocao e acompanhamento."
-      itemLabel="animais"
-      filterComponent={
-        <AnimaisFilter 
-          onSearch={(params) => setFilter(prev => ({ ...prev, ...params }))}
-          onAdd={() => alert("Modal de cadastro será implementado em seguida")}
-        />
-      }
-      fields={[
-        { key: "nome", label: "Nome", placeholder: "Ex: Mingau" },
-        { key: "especie", label: "Especie", placeholder: "Ex: Gato" },
-        { key: "status", label: "Gênero", placeholder: "Ex: Macho" },
-        { key: "responsavel", label: "Idade", placeholder: "Ex: 1 ano" },
-      ]}
-      items={crudItems}
-      onDelete={handleDelete}
-      onEdit={(item) => alert(`Editar ${item.values.nome}`)}
-    />
+    <>
+      <SimpleCrud
+        title="Animais"
+        description="Gerencie os animais cadastrados para adocao e acompanhamento."
+        itemLabel="animais"
+        filterComponent={
+          <AnimaisFilter 
+            onSearch={(params) => setFilter(prev => ({ ...prev, ...params }))}
+            onAdd={handleOpenCreate}
+          />
+        }
+        fields={[
+          { key: "nome", label: "Nome", placeholder: "Ex: Mingau" },
+          { key: "especie", label: "Especie", placeholder: "Ex: Gato" },
+          { key: "status", label: "Gênero", placeholder: "Ex: Macho" },
+          { key: "responsavel", label: "Idade", placeholder: "Ex: 1 ano" },
+        ]}
+        items={crudItems}
+        onDelete={handleDelete}
+        onEdit={(item) => handleOpenEdit(item.raw as Animal)}
+      />
+
+      <AnimalModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSubmit}
+        animal={editingAnimal}
+      />
+    </>
   );
 }

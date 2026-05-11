@@ -32,10 +32,13 @@ export async function createAnimal(formData: FormData) {
   return await response.json();
 }
 
-export async function updateAnimal(id: number, formData: FormData) {
+export async function updateAnimal(id: number, data: FormData | Record<string, any>) {
+  const isFormData = data instanceof FormData;
+  
   const response = await apiFetch(`/animals/${id}`, {
     method: "PATCH",
-    body: formData,
+    headers: isFormData ? {} : { "Content-Type": "application/json" },
+    body: isFormData ? data : JSON.stringify(data),
   });
   if (!response.ok) throw new Error("Falha ao atualizar animal");
   return await response.json();
