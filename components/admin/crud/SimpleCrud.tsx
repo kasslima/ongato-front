@@ -16,7 +16,8 @@ type CrudField = {
 
 type CrudItem = {
   id: string;
-  values: Record<string, string>;
+  values: Record<string, any>;
+  raw?: any;
 };
 
 type SimpleCrudProps = {
@@ -24,8 +25,10 @@ type SimpleCrudProps = {
   description: string;
   itemLabel: string;
   fields: CrudField[];
-  initialItems?: Record<string, string>[];
+  items?: CrudItem[];
   filterComponent?: ReactNode;
+  onEdit?: (item: CrudItem) => void;
+  onDelete?: (id: string) => void;
 };
 
 function buildInitialForm(fields: CrudField[]) {
@@ -38,11 +41,11 @@ function buildInitialForm(fields: CrudField[]) {
   return form;
 }
 
-function normalizeValues(values: Record<string, string>, fields: CrudField[]) {
+function normalizeValues(values: Record<string, any>, fields: CrudField[]) {
   const normalized: Record<string, string> = {};
 
   for (const field of fields) {
-    normalized[field.key] = values[field.key] ?? "";
+    normalized[field.key] = values[field.key]?.toString() ?? "";
   }
 
   return normalized;
@@ -53,72 +56,14 @@ export default function SimpleCrud({
   description,
   itemLabel,
   fields,
-  initialItems = [],
+  items = [],
   filterComponent,
+  onEdit,
+  onDelete,
 }: SimpleCrudProps) {
   const primaryField = fields[0];
   const primaryFieldLabel = primaryField?.label ?? "Item";
   const primaryFieldKey = primaryField?.key;
-
-  const [formValues, setFormValues] = useState<Record<string, string>>(() => buildInitialForm(fields));
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [items, setItems] = useState<CrudItem[]>(() =>
-    initialItems.map((item, index) => ({
-      id: `${Date.now()}-${index}`,
-      values: normalizeValues(item, fields),
-    }))
-  );
-
-  const isEditing = editingId !== null;
-  const submitLabel = isEditing ? `Salvar ${itemLabel}` : `Cadastrar ${itemLabel}`;
-
-  const resetForm = () => {
-    setFormValues(buildInitialForm(fields));
-    setEditingId(null);
-  };
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const nextValues = normalizeValues(formValues, fields);
-
-    if (isEditing) {
-      setItems((current) =>
-        current.map((item) => (item.id === editingId ? { ...item, values: nextValues } : item))
-      );
-      resetForm();
-      return;
-    }
-
-    setItems((current) => [
-      ...current,
-      {
-        id: crypto.randomUUID(),
-        values: nextValues,
-      },
-    ]);
-    resetForm();
-  };
-
-  const handleChange = (key: string, value: string) => {
-    setFormValues((current) => ({
-      ...current,
-      [key]: value,
-    }));
-  };
-
-  const handleEdit = (item: CrudItem) => {
-    setEditingId(item.id);
-    setFormValues(normalizeValues(item.values, fields));
-  };
-
-  const handleDelete = (id: string) => {
-    setItems((current) => current.filter((item) => item.id !== id));
-
-    if (editingId === id) {
-      resetForm();
-    }
-  };
 
   return (
     <section className="mx-auto w-full max-w-6xl">
@@ -194,7 +139,7 @@ export default function SimpleCrud({
                       variant="default" 
                       size="sm"
                       className="flex-1 h-9 bg-neutral-900 hover:bg-neutral-800"
-                      onClick={() => handleEdit(item)}
+                      onClick={() => onEdit?.(item)}
                     >
                       Atualizar
                     </Button>
@@ -203,7 +148,7 @@ export default function SimpleCrud({
                       variant="outline" 
                       size="icon"
                       className="h-9 w-9 border-neutral-200 text-neutral-400 hover:text-red-600 hover:border-red-100 hover:bg-red-50"
-                      onClick={() => handleDelete(item.id)}
+                      onClick={() => onDelete?.(item.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
