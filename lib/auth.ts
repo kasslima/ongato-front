@@ -26,11 +26,15 @@ function dispatchAuthChangeEvent() {
   window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
 }
 
-export function login() {
+export function login(token?: string) {
   if (typeof window === "undefined") {
     return;
   }
 
+  if (token) {
+    localStorage.setItem("ongato:token", token);
+  }
+  
   localStorage.setItem(AUTH_STORAGE_KEY, "true");
   setAuthCookie();
   dispatchAuthChangeEvent();
@@ -41,6 +45,7 @@ export function logout() {
     return;
   }
 
+  localStorage.removeItem("ongato:token");
   localStorage.removeItem(AUTH_STORAGE_KEY);
   clearAuthCookie();
   dispatchAuthChangeEvent();

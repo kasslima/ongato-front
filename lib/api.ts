@@ -18,7 +18,6 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
 
   if (response.status === 401) {
     if (typeof window !== "undefined") {
-      localStorage.removeItem(TOKEN_KEY);
       localLogout();
     }
   }
@@ -36,8 +35,7 @@ export async function login(email: string, password: string) {
   const data = await response.json();
 
   if (response.ok && data.result?.token) {
-    localStorage.setItem(TOKEN_KEY, data.result.token);
-    localLogin();
+    localLogin(data.result.token);
     return data;
   }
 
@@ -45,6 +43,5 @@ export async function login(email: string, password: string) {
 }
 
 export function logout() {
-  localStorage.removeItem(TOKEN_KEY);
   localLogout();
 }
