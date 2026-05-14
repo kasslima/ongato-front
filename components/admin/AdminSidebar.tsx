@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 
-import { ADMIN_TABS, type AdminTab } from "./admin-types";
+import { ADMIN_TABS, type AdminTab } from "@/types/admin";
 
 type AdminSidebarProps = {
   onLogout: () => void;
