@@ -1,27 +1,103 @@
+'use client'
+
+import { useEffect, useState } from "react";
 import SimpleCrud from "@/components/admin/crud/SimpleCrud";
 import { BannersFilter } from "@/components/admin/crud/CrudFilters";
+import { getBanners, deleteBanner, createBanner, updateBanner } from "@/lib/banners";
+import { Banner } from "@/components/admin/banners-types";
+import { BannerModal } from "../BannerModal";
 
 export default function BannersPage() {
+  const [banners, setBanners] = useState<Banner[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<{ title?: string }>({});
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
+
+  const fetchBanners = async () => {
+    try {
+      setLoading(true);
+      const data = await getBanners(filter);
+      setBanners(data);
+    } catch (error) {
+      console.error("Erro ao buscar banners:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBanners();
+  }, [filter]);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Tem certeza que deseja excluir este banner?")) return;
+    try {
+      await deleteBanner(Number(id));
+      fetchBanners();
+    } catch (error) {
+      console.error("Erro ao excluir banner:", error);
+    }
+  };
+
+  const handleOpenCreate = () => {
+    setEditingBanner(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (banner: Banner) => {
+    setEditingBanner(banner);
+    setIsModalOpen(true);
+  };
+
+  const handleSubmit = async (data: FormData | Record<string, any>) => {
+    if (editingBanner) {
+      await updateBanner(editingBanner.id, data);
+    } else {
+      await createBanner(data as FormData);
+    }
+    fetchBanners();
+  };
+
+  const crudItems = banners.map((b) => ({
+    id: b.id.toString(),
+    values: {
+      titulo: b.title,
+      descricao: b.description || "—",
+      criado: b.createdAt ? new Date(b.createdAt).toLocaleDateString("pt-BR") : "—",
+    },
+    raw: b
+  }));
+
   return (
-    <SimpleCrud
-      title="Banners"
-      description="Atualize os banners exibidos nas paginas publicas do site."
-      itemLabel="banners"
-      filterComponent={<BannersFilter />}
-      fields={[
-        { key: "titulo", label: "Titulo", placeholder: "Ex: Campanha de Inverno" },
-        { key: "posicao", label: "Posicao", placeholder: "Ex: Home Topo" },
-        { key: "periodo", label: "Periodo", placeholder: "Ex: Maio/2026" },
-        { key: "visibilidade", label: "Visibilidade", placeholder: "Ex: Publico" },
-      ]}
-      initialItems={[
-        {
-          titulo: "Adote com Amor",
-          posicao: "Home",
-          periodo: "Abr-Jun",
-          visibilidade: "Publico",
-        },
-      ]}
-    />
+    <>
+      <SimpleCrud
+        title="Banners"
+        description="Atualize os banners exibidos nas paginas publicas do site."
+        itemLabel="banners"
+        filterComponent={
+          <BannersFilter 
+            onSearch={(params) => setFilter(prev => ({ ...prev, ...params }))}
+            onAdd={handleOpenCreate}
+          />
+        }
+        fields={[
+          { key: "titulo", label: "Título", placeholder: "Ex: Campanha de Inverno" },
+          { key: "descricao", label: "Descrição", placeholder: "Ex: Banner principal" },
+          { key: "criado", label: "Criado em", placeholder: "Ex: 01/01/2026" },
+        ]}
+        items={crudItems}
+        onDelete={handleDelete}
+        onEdit={(item) => handleOpenEdit(item.raw as Banner)}
+      />
+
+      <BannerModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSubmit}
+        banner={editingBanner}
+      />
+    </>
   );
 }
