@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import SimpleCrud from "@/components/admin/crud/SimpleCrud";
 import { AnimaisFilter } from "@/components/admin/crud/CrudFilters";
 import { getAnimals, deleteAnimal, createAnimal, updateAnimal } from "@/lib/animals";
-import { Animal } from "@/components/admin/animais-types";
-import { AnimalModal } from "../AnimalModal";
+import { Animal } from "@/types/animais";
+import { AnimalModal } from "./AnimalModal";
 
 export default function AnimaisPage() {
   const [animals, setAnimals] = useState<Animal[]>([]);

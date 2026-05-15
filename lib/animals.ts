@@ -1,5 +1,5 @@
 import { apiFetch } from "./api";
-import { Animal, GetAnimalsParams } from "@/components/admin/animais-types";
+import { Animal, GetAnimalsParams } from "@/types/animais";
 
 export async function getAnimals(params: GetAnimalsParams = {}) {
   const query = new URLSearchParams();
