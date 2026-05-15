@@ -1,5 +1,5 @@
 import { apiFetch } from "./api";
-import { User, GetUsersParams } from "@/components/admin/usuarios-types";
+import { User, GetUsersParams } from "@/types/usuarios";
 
 export async function getUsers(params: GetUsersParams = {}) {
   const query = new URLSearchParams();
