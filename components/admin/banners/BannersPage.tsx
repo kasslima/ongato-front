@@ -4,14 +4,13 @@ import { useEffect, useState } from "react";
 import SimpleCrud from "@/components/admin/crud/SimpleCrud";
 import { BannersFilter } from "@/components/admin/crud/CrudFilters";
 import { getBanners, deleteBanner, createBanner, updateBanner } from "@/lib/banners";
-import { Banner } from "@/components/admin/banners-types";
-import { BannerModal } from "../BannerModal";
+import { Banner } from "@/types/banners";
+import { BannerModal } from "./BannerModal";
 
 export default function BannersPage() {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<{ title?: string }>({});
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
 
@@ -27,36 +26,17 @@ export default function BannersPage() {
     }
   };
 
-  useEffect(() => {
-    fetchBanners();
-  }, [filter]);
+  useEffect(() => { fetchBanners(); }, [filter]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Tem certeza que deseja excluir este banner?")) return;
-    try {
-      await deleteBanner(Number(id));
-      fetchBanners();
-    } catch (error) {
-      console.error("Erro ao excluir banner:", error);
-    }
-  };
-
-  const handleOpenCreate = () => {
-    setEditingBanner(null);
-    setIsModalOpen(true);
-  };
-
-  const handleOpenEdit = (banner: Banner) => {
-    setEditingBanner(banner);
-    setIsModalOpen(true);
+    try { await deleteBanner(Number(id)); fetchBanners(); }
+    catch (error) { console.error("Erro ao excluir banner:", error); }
   };
 
   const handleSubmit = async (data: FormData | Record<string, any>) => {
-    if (editingBanner) {
-      await updateBanner(editingBanner.id, data);
-    } else {
-      await createBanner(data as FormData);
-    }
+    if (editingBanner) { await updateBanner(editingBanner.id, data); }
+    else { await createBanner(data as FormData); }
     fetchBanners();
   };
 
@@ -77,9 +57,9 @@ export default function BannersPage() {
         description="Atualize os banners exibidos nas paginas publicas do site."
         itemLabel="banners"
         filterComponent={
-          <BannersFilter 
+          <BannersFilter
             onSearch={(params) => setFilter(prev => ({ ...prev, ...params }))}
-            onAdd={handleOpenCreate}
+            onAdd={() => { setEditingBanner(null); setIsModalOpen(true); }}
           />
         }
         fields={[
@@ -89,9 +69,8 @@ export default function BannersPage() {
         ]}
         items={crudItems}
         onDelete={handleDelete}
-        onEdit={(item) => handleOpenEdit(item.raw as Banner)}
+        onEdit={(item) => { setEditingBanner(item.raw as Banner); setIsModalOpen(true); }}
       />
-
       <BannerModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

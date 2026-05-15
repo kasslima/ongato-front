@@ -1,5 +1,5 @@
 import { apiFetch } from "./api";
-import { Banner, GetBannersParams } from "@/components/admin/banners-types";
+import { Banner, GetBannersParams } from "@/types/banners";
 
 export async function getBanners(params: GetBannersParams = {}) {
   const query = new URLSearchParams();
