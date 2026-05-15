@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import SimpleCrud from "@/components/admin/crud/SimpleCrud";
 import { EventosFilter } from "@/components/admin/crud/CrudFilters";
 import { getEvents, deleteEvent, createEvent, updateEvent } from "@/lib/events";
-import { Event } from "@/components/admin/eventos-types";
-import { EventoModal } from "../EventoModal";
+import { Event } from "@/types/eventos";
+import { EventoModal } from "./EventoModal";
 
 export default function EventosPage() {
   const [events, setEvents] = useState<Event[]>([]);

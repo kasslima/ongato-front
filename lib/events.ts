@@ -1,5 +1,5 @@
 import { apiFetch } from "./api";
-import { Event, GetEventsParams } from "@/components/admin/eventos-types";
+import { Event, GetEventsParams } from "@/types/eventos";
 
 export async function getEvents(params: GetEventsParams = {}) {
   const query = new URLSearchParams();
