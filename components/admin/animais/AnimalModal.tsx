@@ -159,6 +159,18 @@ export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalPr
 
           <div className="grid gap-2">
             <Label htmlFor="image">Imagem {animal ? "(Deixe vazio para manter atual)" : "(Obrigatório)"}</Label>
+            {animal?.imageUrl && !file && (
+              <div className="relative h-32 w-32 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50">
+                <img
+                  src={animal.imageUrl}
+                  alt={animal.name}
+                  className="h-full w-full object-cover"
+                />
+                <span className="absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-0.5 text-center text-[10px] text-white">
+                  Imagem atual
+                </span>
+              </div>
+            )}
             <Input
               id="image"
               type="file"

@@ -42,6 +42,7 @@ export default function BannersPage() {
 
   const crudItems = banners.map((b) => ({
     id: b.id.toString(),
+    imageUrl: b.imageUrl,
     values: {
       titulo: b.title,
       descricao: b.description || "—",

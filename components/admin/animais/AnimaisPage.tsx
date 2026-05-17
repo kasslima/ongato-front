@@ -62,6 +62,7 @@ export default function AnimaisPage() {
 
   const crudItems = animals.map((a) => ({
     id: a.id.toString(),
+    imageUrl: a.imageUrl,
     values: {
       nome: a.name,
       especie: a.type,

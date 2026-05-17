@@ -82,6 +82,18 @@ export function EventoModal({ isOpen, onClose, onSubmit, evento }: EventoModalPr
 
           <div className="grid gap-2">
             <Label htmlFor="image">Imagem {evento ? "(Deixe vazio para manter atual)" : "(Obrigatório)"}</Label>
+            {evento?.imageUrl && !file && (
+              <div className="relative h-32 w-full overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50">
+                <img
+                  src={evento.imageUrl}
+                  alt={evento.title}
+                  className="h-full w-full object-cover"
+                />
+                <span className="absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-0.5 text-center text-[10px] text-white">
+                  Imagem atual
+                </span>
+              </div>
+            )}
             <Input
               id="image"
               type="file"

@@ -62,6 +62,7 @@ export default function EventosPage() {
 
   const crudItems = events.map((e) => ({
     id: e.id.toString(),
+    imageUrl: e.imageUrl,
     values: {
       titulo: e.title,
       texto: e.text || "—",

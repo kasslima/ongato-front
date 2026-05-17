@@ -17,6 +17,7 @@ type CrudField = {
 type CrudItem = {
   id: string;
   values: Record<string, any>;
+  imageUrl?: string;
   raw?: any;
 };
 
@@ -115,9 +116,18 @@ export default function SimpleCrud({
               items.map((item) => (
                 <div
                   key={item.id}
-                  className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 transition-all hover:border-neutral-300 hover:shadow-sm"
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-neutral-200 bg-white transition-all hover:border-neutral-300 hover:shadow-sm"
                 >
-                  <div className="mb-4">
+                  {item.imageUrl && (
+                    <div className="relative h-36 w-full overflow-hidden bg-neutral-100">
+                      <img
+                        src={item.imageUrl}
+                        alt={primaryFieldKey ? item.values[primaryFieldKey] : "Imagem"}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                  )}
+                  <div className="mb-4 p-4 pb-0">
                     <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
                       {primaryFieldLabel}
                     </h4>
@@ -133,7 +143,7 @@ export default function SimpleCrud({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 border-t border-neutral-50 pt-3">
+                  <div className="flex items-center gap-2 border-t border-neutral-50 px-4 pb-4 pt-3">
                     <Button 
                       type="button" 
                       variant="default" 
