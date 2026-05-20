@@ -23,7 +23,7 @@ export function AnimaisFilter({
         </div>
         <div className="relative flex-1 min-w-[180px]">
           <select 
-            className="flex h-10 w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400"
+            className="flex h-10 w-full rounded-md border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:ring-1 focus:ring-neutral-700"
             onChange={(e) => onSearch?.({ type: e.target.value as any })}
           >
             <option value="">Todas as Espécies</option>

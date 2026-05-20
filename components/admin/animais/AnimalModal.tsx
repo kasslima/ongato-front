@@ -103,7 +103,7 @@ export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalPr
               <Label htmlFor="type">Espécie</Label>
               <select
                 id="type"
-                className="flex h-10 w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400"
+                className="flex h-10 w-full rounded-md border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:ring-1 focus:ring-neutral-700"
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
               >
@@ -115,7 +115,7 @@ export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalPr
               <Label htmlFor="gender">Gênero</Label>
               <select
                 id="gender"
-                className="flex h-10 w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400"
+                className="flex h-10 w-full rounded-md border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:ring-1 focus:ring-neutral-700"
                 value={formData.gender}
                 onChange={(e) => setFormData({ ...formData, gender: e.target.value as any })}
               >
@@ -130,7 +130,7 @@ export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalPr
               <Label htmlFor="age">Idade</Label>
               <select
                 id="age"
-                className="flex h-10 w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400"
+                className="flex h-10 w-full rounded-md border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:ring-1 focus:ring-neutral-700"
                 value={formData.age}
                 onChange={(e) => setFormData({ ...formData, age: e.target.value as any })}
               >
@@ -146,7 +146,7 @@ export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalPr
               <Label htmlFor="size">Porte</Label>
               <select
                 id="size"
-                className="flex h-10 w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400"
+                className="flex h-10 w-full rounded-md border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:ring-1 focus:ring-neutral-700"
                 value={formData.size}
                 onChange={(e) => setFormData({ ...formData, size: e.target.value as any })}
               >

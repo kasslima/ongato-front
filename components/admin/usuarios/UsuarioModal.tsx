@@ -48,7 +48,7 @@ export function UsuarioModal({ isOpen, onClose, onSubmit }: UsuarioModalProps) {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="role">Perfil</Label>
-            <select id="role" className="flex h-10 w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400" value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value as "admin" | "dev" })}>
+            <select id="role" className="flex h-10 w-full rounded-md border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:ring-1 focus:ring-neutral-700" value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value as "admin" | "dev" })}>
               <option value="dev">Dev</option>
               <option value="admin">Admin</option>
             </select>
