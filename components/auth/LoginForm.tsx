@@ -36,7 +36,7 @@ export default function LoginForm(){
         } catch (err: any) {
             setError(err.message || "Falha ao entrar. Verifique suas credenciais.");
         } finally {
-            setIsLoading(true);
+            setIsLoading(false);
         }
     };
 

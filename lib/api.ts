@@ -1,6 +1,7 @@
 import { login as localLogin, logout as localLogout } from "./auth";
+import { getApiBaseUrl } from "./env";
 
-const API_BASE_URL = "https://ongato-serverless.lucasribeiro292004.workers.dev";
+const API_BASE_URL = getApiBaseUrl();
 const TOKEN_KEY = "ongato:token";
 
 export async function apiFetch(path: string, options: RequestInit = {}) {
@@ -26,10 +27,11 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
 }
 
 export async function login(email: string, password: string) {
-  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+  const response = await fetch("/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
+    credentials: "include",
   });
 
   const data = await response.json();
@@ -43,5 +45,9 @@ export async function login(email: string, password: string) {
 }
 
 export function logout() {
+  fetch("/api/auth/logout", {
+    method: "POST",
+    credentials: "include",
+  }).catch(() => {});
   localLogout();
 }
