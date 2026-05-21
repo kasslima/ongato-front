@@ -1,11 +1,15 @@
 'use client'
 
-import Navbar from "@/components/site/NavBar";
+import ComoAdotar from "@/components/site/ComoAdotar";
+import Gatos from "@/components/site/Gatos";
+import Sucesso from "@/components/site/Sucesso";
 
-export default function Home() {
+export default function HomePage() {
   return (
-   <>
-   <Navbar/>
-   </>
+    <>
+      <ComoAdotar />
+      <Gatos />
+      <Sucesso />
+    </>
   );
 }
