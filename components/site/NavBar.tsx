@@ -54,8 +54,7 @@ export default function Navbar() {
             Adote Agora
           </button>
          </Link>
-</div>
-
+        </div>
       </div>
     </nav>
   );

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/site/Navbar";
-import Footer from "@/components/site/Footer";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/site/Navbar";
+import Footer from "@/components/site/Footer";
 import Banner from "@/components/site/Banner";
 
 const geistSans = Geist({
@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Instituto Ongato",
   description: "Todo gato merece um lar eterno",
-  colorScheme: 'light',
+  colorScheme: "light",
   icons: {
     icon: "/ongato-logo.png",
     shortcut: "/ongato-logo.png",
@@ -28,14 +28,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt">
+    <html lang="pt" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-screen flex flex-col">
-        <Navbar />
-        <Banner />
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
+
+        <main className="flex-1">{children}</main>
       </body>
     </html>
   );

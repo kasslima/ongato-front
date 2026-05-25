@@ -24,6 +24,7 @@ export async function POST(request: Request) {
     });
 
     const data = await upstreamResponse.json();
+    console.log("Resposta do upstream:", data);
     const token = data?.result?.token;
 
     if (!upstreamResponse.ok || !token) {

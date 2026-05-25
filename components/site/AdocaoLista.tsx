@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 
 const ANIMAIS = [
   { id: 1, nome: "Luna", idade: "2 Anos", tipo: "Gato", tags: ["Brincalhona", "Vacinada"], img: "/ingato1.jpg" },
-  { id: 2, nome: "Oliver", idade: "5 Meses", tipo: "Gato", tags: ["Energético", "Dócil"], img: "/pets/oliver.jpg" },
-  { id: 3, nome: "Max", idade: "1 Ano", tipo: "Cão", tags: ["Leal", "Ama Passear"], img: "/pets/max.jpg" },
-  { id: 4, nome: "Bella", idade: "4 Anos", tipo: "Gato", tags: ["Calma", "Caseira"], img: "/pets/bella.jpg" },
-  { id: 5, nome: "Milo", idade: "1 Ano", tipo: "Gato", tags: ["Tímido", "Gentil"], img: "/pets/milo.jpg" },
-  { id: 6, nome: "Daisy", idade: "3 Anos", tipo: "Cão", tags: ["Amigável", "Adestrada"], img: "/pets/daisy.jpg" },
-  { id: 7, nome: "Simba", idade: "6 Anos", tipo: "Gato", tags: ["Carinhoso", "Sênior"], img: "/pets/simba.jpg" },
-  { id: 8, nome: "Mocha", idade: "2 Anos", tipo: "Gato", tags: ["Independente", "Vocal"], img: "/pets/mocha.jpg" },
+  { id: 2, nome: "Oliver", idade: "5 Meses", tipo: "Gato", tags: ["Energético", "Dócil"], img: "/ingato2.jpg" },
+  { id: 3, nome: "Max", idade: "1 Ano", tipo: "Cão", tags: ["Leal", "Ama Passear"], img: "/ingato3.jpg" },
+  { id: 4, nome: "Bella", idade: "4 Anos", tipo: "Gato", tags: ["Calma", "Caseira"], img: "/ingato4.jpg" },
+  { id: 5, nome: "Milo", idade: "1 Ano", tipo: "Gato", tags: ["Tímido", "Gentil"], img: "/ingato5.jpg" },
+  { id: 6, nome: "Daisy", idade: "3 Anos", tipo: "Cão", tags: ["Amigável", "Adestrada"], img: "/ingato6.jpg" },
+  { id: 7, nome: "Simba", idade: "6 Anos", tipo: "Gato", tags: ["Carinhoso", "Sênior"], img: "/ingato7.jpg" },
+  { id: 8, nome: "Mocha", idade: "2 Anos", tipo: "Gato", tags: ["Independente", "Vocal"], img: "/ingato8.jpg" },
 ];
 
 export default function AdocaoLista() {
