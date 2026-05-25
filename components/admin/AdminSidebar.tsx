@@ -1,6 +1,7 @@
 "use client";
 
 import { CalendarDays, Cat, Megaphone, Search, Users } from "lucide-react";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,7 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 
-import { ADMIN_TABS, type AdminTab } from "./admin-types";
+import { ADMIN_TABS, type AdminTab } from "@/types/admin";
 
 type AdminSidebarProps = {
   onLogout: () => void;
@@ -89,17 +90,25 @@ function AdminSidebarHeader() {
 
   return (
     <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-3 text-white transition-all duration-300">
-      <div className="flex items-center justify-between gap-2">
+      <div className="relative flex items-center gap-2">
         <div
           className={cn(
-            "h-8 rounded-md bg-neutral-100/10 transition-all duration-300",
+            "h-8 w-8 overflow-hidden rounded-md bg-neutral-100/10 transition-all duration-300",
             "w-8 scale-100 opacity-100"
           )}
-        />
-        <div className="min-w-0 max-w-[140px] flex-1 overflow-hidden transition-all duration-300">
-          <p className="text-xs uppercase tracking-[0.2em] text-neutral-400">Untitled</p>
+        >
+          <Image
+            src="/ongato-logo.png"
+            alt="Ongato logo"
+            width={32}
+            height={32}
+            className="h-8 w-8 object-cover"
+          />
         </div>
-        <SidebarTrigger className="h-8 w-8 shrink-0 rounded-md transition-all duration-300" />
+        <div className="absolute left-1/2 -translate-x-1/2 min-w-0 max-w-[140px] overflow-hidden transition-all duration-300">
+          <p className="text-xs uppercase tracking-[0.2em] text-neutral-400">ongato</p>
+        </div>
+        <SidebarTrigger className="absolute right-0 h-8 w-8 shrink-0 rounded-md transition-all duration-300" />
       </div>
     </div>
   );
