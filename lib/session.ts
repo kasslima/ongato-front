@@ -1,7 +1,7 @@
 import { getAuthCookieSecret } from "@/lib/env";
 
 const AUTH_COOKIE_NAME = "ongato_session";
-const SESSION_DURATION_SECONDS = 60 * 60 * 24 * 7;
+const SESSION_DURATION_SECONDS = 30 * 60; // 30 minutes
 
 function toBase64Url(bytes: Uint8Array) {
   return Buffer.from(bytes)
