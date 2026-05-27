@@ -54,9 +54,9 @@ export function EventoModal({ isOpen, onClose, onSubmit, evento }: EventoModalPr
         await onSubmit(formData);
       }
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting evento:", error);
-      alert("Erro ao salvar evento. Verifique os campos.");
+      alert(error.message || "Erro ao salvar evento. Verifique os campos.");
     } finally {
       setLoading(false);
     }
@@ -97,10 +97,13 @@ export function EventoModal({ isOpen, onClose, onSubmit, evento }: EventoModalPr
             <Input
               id="image"
               type="file"
-              accept="image/*"
+              accept="image/jpeg, image/svg+xml, image/webp"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
               required={!evento}
             />
+            <p className="text-[11px] text-neutral-400">
+              Formatos aceitos: JPEG, WEBP e SVG
+            </p>
           </div>
 
           <div className="grid gap-2">

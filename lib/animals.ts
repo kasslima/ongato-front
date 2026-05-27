@@ -1,4 +1,4 @@
-import { apiFetch } from "./api";
+import { apiFetch, throwApiError } from "./api";
 import { Animal, GetAnimalsParams } from "@/types/animais";
 
 export async function getAnimals(params: GetAnimalsParams = {}) {
@@ -10,7 +10,7 @@ export async function getAnimals(params: GetAnimalsParams = {}) {
   if (params.gender) query.set("gender", params.gender);
 
   const response = await apiFetch(`/animals?${query.toString()}`);
-  if (!response.ok) throw new Error("Falha ao buscar animais");
+  if (!response.ok) await throwApiError(response, "Falha ao buscar animais");
   
   const data = await response.json();
   return data.result as Animal[];
@@ -20,7 +20,7 @@ export async function deleteAnimal(id: number) {
   const response = await apiFetch(`/animals/${id}`, {
     method: "DELETE",
   });
-  if (!response.ok) throw new Error("Falha ao excluir animal");
+  if (!response.ok) await throwApiError(response, "Falha ao excluir animal");
 }
 
 export async function createAnimal(formData: FormData) {
@@ -28,7 +28,7 @@ export async function createAnimal(formData: FormData) {
     method: "POST",
     body: formData,
   });
-  if (!response.ok) throw new Error("Falha ao criar animal");
+  if (!response.ok) await throwApiError(response, "Falha ao criar animal");
   return await response.json();
 }
 
@@ -40,6 +40,6 @@ export async function updateAnimal(id: number, data: FormData | Record<string, a
     headers: isFormData ? {} : { "Content-Type": "application/json" },
     body: isFormData ? data : JSON.stringify(data),
   });
-  if (!response.ok) throw new Error("Falha ao atualizar animal");
+  if (!response.ok) await throwApiError(response, "Falha ao atualizar animal");
   return await response.json();
 }
