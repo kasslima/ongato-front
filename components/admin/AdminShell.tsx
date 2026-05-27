@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { logout } from "@/lib/auth";
+import { logout } from "@/lib/api";
 
 type AdminShellProps = {
   children: ReactNode;
