@@ -27,11 +27,10 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
 }
 
 export async function login(email: string, password: string) {
-  const response = await fetch("/api/auth/login", {
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
-    credentials: "include",
   });
 
   const data = await response.json();
@@ -45,10 +44,6 @@ export async function login(email: string, password: string) {
 }
 
 export function logout() {
-  fetch("/api/auth/logout", {
-    method: "POST",
-    credentials: "include",
-  }).catch(() => {});
   localLogout();
 }
 
