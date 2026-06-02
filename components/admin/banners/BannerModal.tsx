@@ -54,9 +54,9 @@ export function BannerModal({ isOpen, onClose, onSubmit, banner }: BannerModalPr
         await onSubmit(formData);
       }
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting banner:", error);
-      alert("Erro ao salvar banner. Verifique os campos.");
+      alert(error.message || "Erro ao salvar banner. Verifique os campos.");
     } finally {
       setLoading(false);
     }
@@ -97,10 +97,13 @@ export function BannerModal({ isOpen, onClose, onSubmit, banner }: BannerModalPr
             <Input
               id="image"
               type="file"
-              accept="image/*"
+              accept="image/jpeg, image/svg+xml, image/webp"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
               required={!banner}
             />
+            <p className="text-[11px] text-neutral-400">
+              Formatos aceitos: JPEG, WEBP e SVG
+            </p>
           </div>
 
           <div className="grid gap-2">

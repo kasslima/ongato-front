@@ -72,9 +72,9 @@ export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalPr
         await onSubmit(formData);
       }
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting animal:", error);
-      alert("Erro ao salvar animal. Verifique os campos.");
+      alert(error.message || "Erro ao salvar animal. Verifique os campos.");
     } finally {
       setLoading(false);
     }
@@ -174,10 +174,13 @@ export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalPr
             <Input
               id="image"
               type="file"
-              accept="image/*"
+              accept="image/jpeg, image/svg+xml, image/webp"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
               required={!animal}
             />
+            <p className="text-[11px] text-neutral-400">
+              Formatos aceitos: JPEG, WEBP e SVG
+            </p>
           </div>
 
           <div className="grid gap-2">

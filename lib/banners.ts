@@ -1,4 +1,4 @@
-import { apiFetch } from "./api";
+import { apiFetch, throwApiError } from "./api";
 import { Banner, GetBannersParams } from "@/types/banners";
 
 export async function getBanners(params: GetBannersParams = {}) {
@@ -8,7 +8,7 @@ export async function getBanners(params: GetBannersParams = {}) {
   if (params.title) query.set("title", params.title);
 
   const response = await apiFetch(`/banners?${query.toString()}`);
-  if (!response.ok) throw new Error("Falha ao buscar banners");
+  if (!response.ok) await throwApiError(response, "Falha ao buscar banners");
   
   const data = await response.json();
   return data.result as Banner[];
@@ -18,7 +18,7 @@ export async function deleteBanner(id: number) {
   const response = await apiFetch(`/banners/${id}`, {
     method: "DELETE",
   });
-  if (!response.ok) throw new Error("Falha ao excluir banner");
+  if (!response.ok) await throwApiError(response, "Falha ao excluir banner");
 }
 
 export async function createBanner(formData: FormData) {
@@ -26,7 +26,7 @@ export async function createBanner(formData: FormData) {
     method: "POST",
     body: formData,
   });
-  if (!response.ok) throw new Error("Falha ao criar banner");
+  if (!response.ok) await throwApiError(response, "Falha ao criar banner");
   return await response.json();
 }
 
@@ -38,6 +38,6 @@ export async function updateBanner(id: number, data: FormData | Record<string, a
     headers: isFormData ? {} : { "Content-Type": "application/json" },
     body: isFormData ? data : JSON.stringify(data),
   });
-  if (!response.ok) throw new Error("Falha ao atualizar banner");
+  if (!response.ok) await throwApiError(response, "Falha ao atualizar banner");
   return await response.json();
 }

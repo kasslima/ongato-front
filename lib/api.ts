@@ -51,3 +51,26 @@ export function logout() {
   }).catch(() => {});
   localLogout();
 }
+
+export async function throwApiError(response: Response, defaultMessage: string): Promise<never> {
+  let errorMsg = defaultMessage;
+  try {
+    const errData = await response.json();
+    if (errData?.result && typeof errData.result === "object") {
+      const fields = Object.keys(errData.result);
+      const fieldErrors = fields
+        .map(field => {
+          const errors = errData.result[field];
+          const errorList = Array.isArray(errors) ? errors.join(", ") : String(errors);
+          return `${field}: ${errorList}`;
+        })
+        .join("; ");
+      if (fieldErrors) {
+        errorMsg = fieldErrors;
+      }
+    } else if (errData?.message) {
+      errorMsg = errData.message;
+    }
+  } catch {}
+  throw new Error(errorMsg);
+}

@@ -1,4 +1,4 @@
-import { apiFetch } from "./api";
+import { apiFetch, throwApiError } from "./api";
 import { Event, GetEventsParams } from "@/types/eventos";
 
 export async function getEvents(params: GetEventsParams = {}) {
@@ -8,7 +8,7 @@ export async function getEvents(params: GetEventsParams = {}) {
   if (params.title) query.set("title", params.title);
 
   const response = await apiFetch(`/events?${query.toString()}`);
-  if (!response.ok) throw new Error("Falha ao buscar eventos");
+  if (!response.ok) await throwApiError(response, "Falha ao buscar eventos");
   
   const data = await response.json();
   return data.result as Event[];
@@ -18,7 +18,7 @@ export async function deleteEvent(id: number) {
   const response = await apiFetch(`/events/${id}`, {
     method: "DELETE",
   });
-  if (!response.ok) throw new Error("Falha ao excluir evento");
+  if (!response.ok) await throwApiError(response, "Falha ao excluir evento");
 }
 
 export async function createEvent(formData: FormData) {
@@ -26,7 +26,7 @@ export async function createEvent(formData: FormData) {
     method: "POST",
     body: formData,
   });
-  if (!response.ok) throw new Error("Falha ao criar evento");
+  if (!response.ok) await throwApiError(response, "Falha ao criar evento");
   return await response.json();
 }
 
@@ -38,6 +38,6 @@ export async function updateEvent(id: number, data: FormData | Record<string, an
     headers: isFormData ? {} : { "Content-Type": "application/json" },
     body: isFormData ? data : JSON.stringify(data),
   });
-  if (!response.ok) throw new Error("Falha ao atualizar evento");
+  if (!response.ok) await throwApiError(response, "Falha ao atualizar evento");
   return await response.json();
 }
