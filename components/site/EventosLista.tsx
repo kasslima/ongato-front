@@ -40,13 +40,13 @@ export default function EventosLista() {
         
         {/* Cabeçalho */}
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">Próximos Eventos</h1>
+          <h1 className="text-4xl font-bold text-slate-900 mb-4">Próximos Eventos</h1> border-[#FF7A29
           <p className="text-slate-500 max-w-2xl leading-relaxed">
             Participe das nossas feiras de adoção, workshops educacionais e mutirões. Juntos, podemos fazer muito mais pela causa felina.
           </p>
         </div>
 
-        {/* Lista de Eventos */}
+        {/* Lista de Eventos */}   
         <div className="space-y-6 max-w-4xl">
           {EVENTOS.map((evento) => (
             <div 

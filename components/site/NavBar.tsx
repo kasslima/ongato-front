@@ -22,9 +22,12 @@ export default function Navbar() {
         
         {/* Lado Esquerdo: Logo */}
         <div className="flex items-center gap-2">
-          <Image src="/ongato-logo.png" alt="Instituto Ongato" width={40} height={40} />
+          <Link href="/navbar" className="block">
+       <Image src="/ongato-logo.png" alt="Instituto Ongato" width={40} height={40} />
+         </Link>
           <span className="text-xl font-bold text-[#7C3AED]">Instituto Ongato</span>
         </div>
+
 
         {/* Centro: Links de Navegação Dinâmicos */}
         <div className="hidden md:flex items-center gap-8 text-sm font-medium">
