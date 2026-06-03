@@ -63,7 +63,6 @@ export default function Footer() {
               </button>
             </div>
           </div>
-
         </div>
 
         {/* Linha Inferior: Copyright */}
