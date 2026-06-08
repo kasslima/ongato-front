@@ -5,14 +5,14 @@ import { ChevronLeft, ChevronRight, ArrowRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const ANIMAIS = [
-  { id: 1, nome: "Luna", idade: "2 Anos", tipo: "Gato", tags: ["Brincalhona", "Vacinada"], img: "/ingato1.jpg" },
-  { id: 2, nome: "Oliver", idade: "5 Meses", tipo: "Gato", tags: ["Energético", "Dócil"], img: "/ingato2.jpg" },
-  { id: 3, nome: "Max", idade: "1 Ano", tipo: "Cão", tags: ["Leal", "Ama Passear"], img: "/ingato3.jpg" },
-  { id: 4, nome: "Bella", idade: "4 Anos", tipo: "Gato", tags: ["Calma", "Caseira"], img: "/ingato4.jpg" },
-  { id: 5, nome: "Milo", idade: "1 Ano", tipo: "Gato", tags: ["Tímido", "Gentil"], img: "/ingato5.jpg" },
-  { id: 6, nome: "Daisy", idade: "3 Anos", tipo: "Cão", tags: ["Amigável", "Adestrada"], img: "/ingato6.jpg" },
-  { id: 7, nome: "Simba", idade: "6 Anos", tipo: "Gato", tags: ["Carinhoso", "Sênior"], img: "/ingato7.jpg" },
-  { id: 8, nome: "Mocha", idade: "2 Anos", tipo: "Gato", tags: ["Independente", "Vocal"], img: "/ingato8.jpg" },
+  { id: 1, nome: "Luna", idade: "2 Anos", tipo: "Gato", tags: ["Brincalhona", "Vacinada"], image: "/ingatos1.jpg" },
+  { id: 2, nome: "Oliver", idade: "5 Meses", tipo: "Gato", tags: ["Energético", "Dócil"], image: "/ingatos2.jpg" },
+  { id: 3, nome: "Max", idade: "1 Ano", tipo: "Cão", tags: ["Leal", "Ama Passear"], image: "/ingatos3.jpg" },
+  { id: 4, nome: "Bella", idade: "4 Anos", tipo: "Gato", tags: ["Calma", "Caseira"], image: "/ingatos4.jpg" },
+  { id: 5, nome: "Milo", idade: "1 Ano", tipo: "Gato", tags: ["Tímido", "Gentil"], image: "/ingatos8.jpg" },
+  { id: 6, nome: "Daisy", idade: "3 Anos", tipo: "Cão", tags: ["Amigável", "Adestrada"], image: "/ingatos9.jpg" },
+  { id: 7, nome: "Simba", idade: "6 Anos", tipo: "Gato", tags: ["Carinhoso", "Sênior"], image: "/ingatos10.jpg" },
+  { id: 8, nome: "Mocha", idade: "2 Anos", tipo: "Gato", tags: ["Independente", "Vocal"], image: "/ingatos11.jpg" },
 ];
 
 export default function AdocaoLista() {
@@ -44,7 +44,7 @@ export default function AdocaoLista() {
             {/* Fase da Vida */}
             <div className="flex flex-col gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Fase da Vida</span>
-              <select className="bg-white border border-slate-100 p-2 rounded-xl text-sm font-medium text-slate-600 outline-none shadow-sm min-w-37.5">
+              <select className="bg-white border border-slate-100 p-2 rounded-xl text-sm font-medium text-slate-600 outline-none shadow-sm min-w-40">
                 <option>Qualquer Idade</option>
                 <option>Filhote</option>
                 <option>Adulto</option>
@@ -55,7 +55,7 @@ export default function AdocaoLista() {
             {/* Porte */}
             <div className="flex flex-col gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Porte</span>
-              <select className="bg-white border border-slate-100 p-2 rounded-xl text-sm font-medium text-slate-600 outline-none shadow-sm min-w-37.5">
+              <select className="bg-white border border-slate-100 p-2 rounded-xl text-sm font-medium text-slate-600 outline-none shadow-sm min-w-40">
                 <option>Todos os Portes</option>
                 <option>Pequeno</option>
                 <option>Médio</option>
@@ -66,16 +66,25 @@ export default function AdocaoLista() {
 
           <div className="flex items-center gap-2 text-slate-400 text-sm italic">
             <Search size={16} />
-            Mostrando 12 animais
+            Mostrando {ANIMAIS.length} animais
           </div>
         </div>
 
         {/* Grid de Animais */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {ANIMAIS.map((pet) => (
-            <div key={pet.id} className="bg-white rounded-4xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
-              <div className="relative aspect-square">
-                <Image src={pet.img} alt={pet.nome} fill className="object-cover" />
+            <div key={pet.id} className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
+              
+              {/* CONTAINER DA IMAGEM CORRIGIDO: w-full e bg de fallback adicionados */}
+              <div className="relative w-full aspect-square bg-slate-100">
+                <Image 
+                  src={pet.image} 
+                  alt={pet.nome} 
+                  fill 
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="object-cover"
+                  priority={pet.id <= 4}
+                />
                 <div className={`absolute top-3 left-3 px-3 py-1 rounded-lg text-[10px] font-bold text-white uppercase ${pet.tipo === 'Gato' ? 'bg-[#7C3AED]' : 'bg-[#FF7A29]'}`}>
                   {pet.tipo}
                 </div>

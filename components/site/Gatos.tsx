@@ -33,11 +33,11 @@ export default function Gatos() {
   ];
 
   return (
-    <section className="py-20 px-4" style={{background: 'linear-gradient(to bottom, #f3e8ff, #f5f3ff, #ffffff)'}}>
+    <section className="py-10 px-4" style={{background: 'linear-gradient(to bottom, #f3e8ff, #f5f3ff, #ffffff)'}}>
       <div className="container mx-auto">
         
         {/* Cabeçalho da Seção */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-2">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
               Residentes em Destaque

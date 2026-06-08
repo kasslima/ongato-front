@@ -1,7 +1,7 @@
 'use client'
 
 import Banner from "@/components/site/Banner";
-import ComoAdotar from "@/components/site/ComoAdotar";
+import ComoAdotar from "@/components/site/Sobre_Nos";
 import Footer from "@/components/site/Footer";
 import Gatos from "@/components/site/Gatos";
 import Navbar from "@/components/site/Navbar";
@@ -12,7 +12,7 @@ export default function HomePage() {
     <>
       <Navbar/>
       <Banner />
-      <ComoAdotar />
+   <ComoAdotar/>
       <Gatos />
       <Sucesso />
       <Footer/>

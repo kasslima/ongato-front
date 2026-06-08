@@ -7,7 +7,7 @@ export default function Footer() {
   return (
     <footer className="w-full bg-[#F8FAFC] pt-16 pb-8 border-t border-slate-200">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-6">
           
           {/* Coluna 1: Logo e Descrição */}
           <div className="flex flex-col space-y-4">
@@ -23,7 +23,7 @@ export default function Footer() {
           {/* Coluna 2: Institucional */}
           <div className="flex flex-col space-y-4">
             <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900">Institucional</h3>
-            <ul className="flex flex-col space-y-3 text-slate-400">
+            <ul className="flex flex-col space-y-3 text-slate-500">
               <li><Link href="/sobre" className="hover:text-[#7C3AED] transition-colors">Sobre Nós</Link></li>
               <li><Link href="/voluntariado" className="hover:text-[#7C3AED] transition-colors">Seja Voluntário</Link></li>
               <li><Link href="/historias" className="hover:text-[#7C3AED] transition-colors">Histórias de Sucesso</Link></li>
@@ -34,7 +34,7 @@ export default function Footer() {
           {/* Coluna 3: Contato */}
           <div className="flex flex-col space-y-4">
             <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900">Contato</h3>
-            <ul className="flex flex-col space-y-4 text-slate-400">
+            <ul className="flex flex-col space-y-4 text-slate-500">
               <li className="flex items-center gap-3">
                 <Mail size={20} className="text-[#7C3AED]" />
                 <span className="truncate">contato@ongato.org.br</span>
@@ -47,9 +47,9 @@ export default function Footer() {
           </div>
 
           {/* Coluna 4: Redes Sociais */}
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col space-y-0">
             <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900">Redes Sociais</h3>
-            <div className="flex gap-4">
+            <div className="flex gap-2">
               <Link 
                 href="https://instagram.com" 
                 className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white transition-all shadow-sm"
@@ -66,11 +66,11 @@ export default function Footer() {
         </div>
 
         {/* Linha Inferior: Copyright */}
-        <div className="pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-slate-400">
+        <div className="pt-8 border-t bg-white border-slate-100 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-sm text-slate-500">
             © 2024 Instituto Ongato. CNPJ: 00.000.000/0001-00. Todos os direitos reservados.
           </p>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300">
+          <p className="text-[10px] font-bold uppercase text-slate-500">
             Feito com amor por amantes de felinos
           </p>
         </div>

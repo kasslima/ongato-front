@@ -20,7 +20,7 @@ export default function Sucesso() {
   return (
     <section className="py-20 px-4 bg-slate-50">
       <div className="container mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-slate-900 mb-16">
+        <h2 className="text-3xl md:text-4xl font-bold text-center text-slate-900 mb-10">
           Histórias de Sucesso
         </h2>
 
