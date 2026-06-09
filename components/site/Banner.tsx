@@ -45,12 +45,12 @@ export default function Banner() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-    }, 8000);
+    }, 7000);
     return () => clearInterval(timer);
   }, []);
 
   return (
-    <section className="relative w-full h-[400px] md:h-[600px] overflow-hidden bg-slate-900">
+    <section className="relative w-full h-[460px] sm:h-[500px] md:h-[600px] overflow-hidden bg-slate-900">
       <AnimatePresence mode="wait">
         <motion.div
           key={slides[current].id}
@@ -60,7 +60,7 @@ export default function Banner() {
           transition={{ duration: 1 }}
           className="absolute inset-0 w-full h-full"
         >
-          {/* IMAGEM DE FUNDO (OCUPA TUDO) */}
+          {/* IMAGEM DE FUNDO */}
           <motion.div 
             initial={{ scale: 1.1 }}
             animate={{ scale: 1 }}
@@ -74,40 +74,42 @@ export default function Banner() {
               className="object-cover"
               priority
             />
-            {/* Overlay Escuro para dar leitura ao texto */}
-            <div className="absolute inset-0 bg-black/40 md:bg-black/30" />
+            {/* Overlay ligeiramente mais escuro no mobile para salvar a leitura do texto */}
+            <div className="absolute inset-0 bg-black/50 md:bg-black/30" />
           </motion.div>
 
-          {/* CONTEÚDO CENTRALIZADO */}
+          {/* CONTEÚDO */}
           <div className="absolute inset-0 flex items-center">
-            <div className="container mx-auto px-4 md:px-12">
+            <div className="container mx-auto px-5 md:px-12">
               <motion.div
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="max-w-2xl text-white"
+                className="max-w-2xl text-center md:text-left mx-auto md:mx-0 text-white"
               >
-                <div className="inline-block px-4 py-1 bg-purple-600 text-white rounded-full text-xs font-bold uppercase tracking-wider mb-6">
+                <div className="inline-block px-4 py-1 bg-purple-600 text-white rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider mb-4 md:mb-6">
                   {slides[current].badge}
                 </div>
 
-                <h1 className="text-4xl md:text-7xl font-extrabold leading-tight drop-shadow-md">
+                {/* Tipografia responsiva para evitar quebras gigantes no celular */}
+                <h1 className="text-3xl sm:text-4xl md:text-7xl font-extrabold leading-tight drop-shadow-md">
                   {slides[current].title}
                   <span className="text-[#FF7A29]">{slides[current].titleAccent}</span>.
                 </h1>
 
-                <p className="text-slate-100 text-lg md:text-xl max-w-lg mt-6 drop-shadow-sm">
+                <p className="text-slate-200 md:text-slate-100 text-sm sm:text-base md:text-xl max-w-lg mt-4 md:mt-6 drop-shadow-sm mx-auto md:mx-0">
                   {slides[current].description}
                 </p>
 
-                <div className="flex flex-wrap gap-4 mt-10">
-                  <Link href="/adocao">
-                    <button className="bg-[#FF7A29] hover:bg-[#e66a1f] text-white px-10 py-4 rounded-full font-bold transition-all shadow-xl flex items-center gap-2">
-                      Adote Agora <ChevronRight size={20} />
+                {/* Botões empilhados no mobile, lado a lado no desktop */}
+                <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-3 mt-8 md:mt-10 max-w-xs sm:max-w-none mx-auto md:mx-0">
+                  <Link href="/adocao" className="w-full sm:w-auto">
+                    <button className="w-full sm:w-auto bg-[#FF7A29] hover:bg-[#e66a1f] text-white px-8 py-3.5 md:px-10 md:py-4 rounded-full font-bold transition-all shadow-xl flex items-center justify-center gap-2 text-sm md:text-base">
+                      Adote Agora <ChevronRight size={18} />
                     </button>
                   </Link>
 
-                  <button className="bg-white/10 backdrop-blur-md border-2 border-white/20 text-white hover:bg-white/20 px-10 py-4 rounded-full font-bold transition-all">
+                  <button className="w-full sm:w-auto bg-white/10 backdrop-blur-md border-2 border-white/20 text-white hover:bg-white/20 px-8 py-3.5 md:px-10 md:py-4 rounded-full font-bold transition-all text-sm md:text-base">
                     Saiba Mais
                   </button>
                 </div>
@@ -115,11 +117,11 @@ export default function Banner() {
             </div>
           </div>
 
-          {/* CARD FLUTUANTE (AGORA INTEGRADO AO SLIDE) */}
+          {/* CARD FLUTUANTE (Oculto no mobile 'hidden', visível no desktop 'md:flex') */}
           <motion.div
             initial={{ x: 50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="absolute bottom-10 right-4 md:right-12 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-2xl flex items-center gap-4 border border-white"
+            className="hidden md:flex absolute bottom-12 right-12 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-2xl items-center gap-4 border border-white"
           >
             <div className="bg-[#FF7A29] p-3 rounded-full">
               <Heart className="text-white w-6 h-6 fill-current" />
@@ -135,14 +137,15 @@ export default function Banner() {
       </AnimatePresence>
 
       {/* INDICADORES (PONTINHOS) */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 md:left-12 md:translate-x-0 flex gap-3 z-20">
+      <div className="absolute bottom-6 md:bottom-12 left-1/2 -translate-x-1/2 md:left-12 md:translate-x-0 flex gap-2 z-20">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrent(index)}
-            className={`h-3 rounded-full transition-all duration-300 ${
-              index === current ? "w-10 bg-[#FF7A29]" : "w-3 bg-white/50 hover:bg-white"
+            className={`h-2.5 rounded-full transition-all duration-300 ${
+              index === current ? "w-8 bg-[#FF7A29]" : "w-2.5 bg-white/40 hover:bg-white"
             }`}
+            aria-label={`Ir para o slide ${index + 1}`}
           />
         ))}
       </div>
