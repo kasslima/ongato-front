@@ -81,7 +81,7 @@ export default function Navbar() {
         */}
         <button 
           onClick={toggleMenu} 
-          className="md:hidden text-slate-600 hover:text-[#7C3AED] p-2 focus:outline-none"
+          className="md:hidden text-orange-400 hover:text-[#7C3AED] p-2 focus:outline-none"
           aria-label="Toggle Menu"
         >
           {isOpen ? <X size={28} /> : <Menu size={28} />}
