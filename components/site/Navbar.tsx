@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation"; 
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react"; 
+import { Heart, ChevronRight } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname(); 
@@ -23,15 +24,27 @@ export default function Navbar() {
 
   return (
     <nav className="w-full bg-white shadow-sm relative z-50">
-      <div className="container mx-auto flex h-20 items-center justify-center md:justify-between px-5 relative">
+      {/* ALTERAÇÃO: Mudamos de 'justify-center md:justify-between' para 'justify-between'.
+        Isso garante que no mobile a logo/nome fiquem de um lado e o botão hambúrguer do outro de forma natural.
+      */}
+      <div className="container mx-auto flex h-20 items-center justify-between px-5 relative">
         
-        {/* Centro (Mobile) / Lado Esquerdo (Desktop): Logo e Nome */}
-        <div className="flex items-center gap-3 md:gap-6">
+        {/* Lado Esquerdo: Logo e Nome (Sempre alinhados juntos, sem quebrar) */}
+        <div className="flex items-center gap-3 md:gap-6 shrink-0">
           <Link href="/" className="block">
-            <Image src="/ongato-logo.png" alt="Instituto Ongato" width={50} height={50} className="md:w-[60px] md:h-[60px]" />
+            <Image 
+              src="/ongato-logo.png" 
+              alt="Instituto Ongato" 
+              width={50} 
+              height={50} 
+              className="md:w-[60px] md:h-[60px]" 
+            />
           </Link>
-          <span className="text-xl font-bold text-[#7C3AED]">Instituto Ongato</span>
         </div>
+
+         <span className=" flex flex-col p-2 gap-1 text-center text-xl font-bold text-[#7C3AED] select-none whitespace-nowrap">
+            Instituto Ongato
+          </span>
 
         {/* Centro: Links de Navegação Dinâmicos (Apenas Desktop) */}
         <div className="hidden md:flex items-center gap-4 text-sm font-medium">
@@ -54,24 +67,21 @@ export default function Navbar() {
         </div>
 
         {/* Lado Direito: Botão Adotar (Apenas Desktop) */}
-        <div className="hidden md:block">
-          <Link href="/adocao">
-            <Button className="bg-[#FF7A29] hover:bg-[#e66a1f] text-white px-8 py-6 rounded-full font-bold transition-all shadow-lg text-md border-none">
-              Adote Agora
-            </Button>
-            
-
-            
-          </Link>
+        <div>
+          <Link href="/adocao" className="hidden md:block">
+          <button className="w-full sm:w-auto bg-[#FF7A29] hover:bg-[#e66a1f] text-white px-8 py-6 md:px-10 md:py-4 rounded-full font-bold transition-all shadow-xl flex items-center justify-center gap-2 text-sm md:text-base">
+             Adote Agora <ChevronRight size={18} />
+          </button>
+         </Link>
         </div>
 
-        {/* 
-          Botão Hambúrguer: Fixado no canto direito de forma absoluta no mobile, 
-          para que ele não empurre o título do Instituto para o lado.
+        {/* Botão Hambúrguer (Apenas Mobile): 
+          Removido o 'absolute' e 'right-5'. Agora ele se posiciona organicamente 
+          à direita por causa do 'justify-between' do container pai.
         */}
         <button 
           onClick={toggleMenu} 
-          className="absolute right-5 md:hidden text-slate-600 hover:text-[#7C3AED] p-2 focus:outline-none"
+          className="md:hidden text-slate-600 hover:text-[#7C3AED] p-2 focus:outline-none"
           aria-label="Toggle Menu"
         >
           {isOpen ? <X size={28} /> : <Menu size={28} />}
@@ -84,7 +94,7 @@ export default function Navbar() {
           isOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-4 pointer-events-none"
         }`}
       >
-        <div className="flex flex-col p-4 gap-2 text-center font-medium">
+        <div className="flex flex-col p-2 gap-1 text-center font-medium">
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
@@ -103,14 +113,14 @@ export default function Navbar() {
             );
           })}
           
-          <hr className="border-slate-100 my-2" />
+          <hr className="border-slate-100" />
           
           {/* Botão Adote Laranja dentro do menu mobile */}
           <Link href="/adocao" onClick={() => setIsOpen(false)}>
-            <Button className="w-full bg-[#FF7A29] hover:bg-[#e66a1f] text-white py-6 rounded-full font-bold shadow-lg border-none">
-              Adote Agora
-            </Button>
-          </Link>
+          <button className="w-full sm:w-auto bg-[#FF7A29] hover:bg-[#e66a1f] text-white px-8 py-3 md:px-10 md:py-4 rounded-full font-bold transition-all shadow-xl flex items-center justify-center gap-1 text-sx md:text-base">
+            Adote Agora <ChevronRight size={21} />
+          </button>
+         </Link>
         </div>
       </div>
     </nav>

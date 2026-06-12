@@ -45,7 +45,7 @@ export default function Banner() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-    }, 7000);
+    }, 100000);
     return () => clearInterval(timer);
   }, []);
 
@@ -64,7 +64,7 @@ export default function Banner() {
           <motion.div 
             initial={{ scale: 1.1 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 8 }}
+            transition={{ duration: 10 }}
             className="relative w-full h-full"
           >
             <Image
