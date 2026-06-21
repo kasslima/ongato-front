@@ -362,13 +362,6 @@ export default function AdocaoLista() {
               </div>
               
               {/* Fotos Menores (Thumbnails) */}
-              <div className="grid grid-cols-3 gap-3">
-                {petSelecionado.fotosAdicionais?.map((foto, index) => (
-                  <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-slate-200 border border-slate-100 hover:opacity-80 transition-opacity cursor-pointer">
-                    <Image src={foto} alt={`${petSelecionado.nome} foto ${index + 1}`} fill className="object-cover" />
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Lado Direito: Informações e Ação */}
