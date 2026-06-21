@@ -2,47 +2,156 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, ArrowRight, Search, SlidersHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight, Search, SlidersHorizontal, X, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Lista expandida para 12 animais (com placeholders prontos para suas URLs)
+// Lista completa com todos os 12 animais, suas fotos adicionais e descrições completas
 const ANIMAIS = [
-  { id: 1, nome: "Luna", idade: "2 Anos", tipo: "Gato", tags: ["Brincalhona", "Vacinada"], image: "/ingatos1.jpg" },
-  { id: 2, nome: "Oliver", idade: "5 Meses", tipo: "Gato", tags: ["Energético", "Dócil"], image: "/ingatos2.jpg" },
-  { id: 3, nome: "Max", idade: "1 Ano", tipo: "Cão", tags: ["Leal", "Ama Passear"], image: "/ingatos3.jpg" },
-  { id: 4, nome: "Bella", idade: "4 Anos", tipo: "Gato", tags: ["Calma", "Caseira"], image: "/ingatos4.jpg" },
-  { id: 5, nome: "Milo", idade: "1 Ano", tipo: "Gato", tags: ["Tímido", "Gentil"], image: "/ingatos8.jpg" },
-  { id: 6, nome: "Daisy", idade: "3 Anos", tipo: "Cão", tags: ["Amigável", "Adestrada"], image: "/ingatos9.jpg" },
-  { id: 7, nome: "Simba", idade: "6 Anos", tipo: "Gato", tags: ["Carinhoso", "Sênior"], image: "/ingatos10.jpg" },
-  { id: 8, nome: "Mocha", idade: "2 Anos", tipo: "Gato", tags: ["Independente", "Vocal"], image: "/ingatos11.jpg" },
-  { id: 9, nome: "Pipoca", idade: "3 Meses", tipo: "Gato", tags: ["Curioso", "Vacinado"], image: "/ingatos12.jpg" },
-  { id: 10, nome: "Thor", idade: "2 Anos", tipo: "Cão", tags: ["Protetor", "Brincalhão"], image: "/ingatos13.jpg" },
-  { id: 11, nome: "Mel", idade: "8 Meses", tipo: "Cão", tags: ["Dócil", "Sociável"], image: "/ingatos14.jpg" },
-  { id: 12, nome: "Chico", idade: "3 Anos", tipo: "Gato", tags: ["Dorminhoco", "Comilão"], image: "/ingatos15.jpg" },
+  { 
+    id: 1, 
+    nome: "Luna", 
+    idade: "2 Anos", 
+    tipo: "Gato", 
+    tags: ["Brincalhona", "Vacinada", "Castrada"], 
+    image: "/ingatos1.jpg",
+    descricaoLonga: "Luna é uma gatinha cheia de energia e amor para dar. Foi resgatada nas ruas, mas logo mostrou ser super dócil. Adora brincar com bolinhas de papel e dormir no sol da tarde. Já está castrada, vacinada e vermifugada, pronta para encher sua casa de alegria."
+  },
+  { 
+    id: 2, 
+    nome: "Oliver", 
+    idade: "5 Meses", 
+    tipo: "Gato", 
+    tags: ["Energético", "Dócil"], 
+    image: "/ingatos2.jpg",
+    descricaoLonga: "Oliver é um filhote muito curioso que adora explorar cada cantinho. Se dá super bem com outros animais e é perfeito para famílias com crianças."
+  },
+  { 
+    id: 3, 
+    nome: "Max", 
+    idade: "1 Ano", 
+    tipo: "Gato", 
+    tags: ["Leal", "Ama Passear"], 
+    image: "/ingatos3.jpg", 
+    descricaoLonga: "Max é um gato leal, companheiro e muito tranquilo. Gosta de observar o movimento e tirar longas sonecas." 
+  },
+  { 
+    id: 4, 
+    nome: "Bella", 
+    idade: "4 Anos", 
+    tipo: "Gato", 
+    tags: ["Calma", "Caseira"], 
+    image: "/ingatos4.jpg", 
+    descricaoLonga: "Bella é super caseira e calma, ideal para quem busca uma companhia silenciosa e carinhosa para o dia a dia." 
+  },
+  { 
+    id: 5, 
+    nome: "Milo", 
+    idade: "1 Ano", 
+    tipo: "Gato", 
+    tags: ["Tímido", "Gentil"], 
+    image: "/ingatos5.jpg", 
+    descricaoLonga: "Milo é um pouco tímido no começo, mas logo se revela um gatinho extremamente gentil e apegado." 
+  },
+  { 
+    id: 6, 
+    nome: "Daisy", 
+    idade: "3 Anos", 
+    tipo: "Gato", 
+    tags: ["Amigável", "Adestrada"], 
+    image: "/ingatos6.jpg", 
+    descricaoLonga: "Daisy é muito amigável, sociável e super receptiva a novas pessoas. Um doce de felino." 
+  },
+  { 
+    id: 7, 
+    nome: "Simba", 
+    idade: "6 Anos", 
+    tipo: "Cão", 
+    tags: ["Carinhoso", "Sênior"], 
+    image: "/ingatos7.jpg", 
+    descricaoLonga: "Simba é um cãozinho sênior muito experiente, extremamente carinhoso e que só quer uma caminha quentinha." 
+  },
+  { 
+    id: 8, 
+    nome: "Mocha", 
+    idade: "2 Anos", 
+    tipo: "Cão", 
+    tags: ["Independente", "Vocal"], 
+    image: "/ingatos8.jpg", 
+    descricaoLonga: "Mocha tem uma personalidade independente e adora demonstrar sua alegria emitindo sons fofos." 
+  },
+  { 
+    id: 9, 
+    nome: "Pipoca", 
+    idade: "3 Meses", 
+    tipo: "Cão", 
+    tags: ["Curioso", "Vacinado"], 
+    image: "/ingatos9.jpg", 
+    descricaoLonga: "Pipoca é um filhote muito curioso e cheio de energia, já com a vacinação em dia." 
+  },
+  { 
+    id: 10, 
+    nome: "Thor", 
+    idade: "2 Anos", 
+    tipo: "Cão", 
+    tags: ["Protetor", "Brincalhão"], 
+    image: "/ingatos10.jpg", 
+    descricaoLonga: "Thor é um cão de guarda nato, protetor, mas que adora uma boa brincadeira com bolinhas." 
+  },
+  { 
+    id: 11, 
+    nome: "Mel", 
+    idade: "8 Meses", 
+    tipo: "Cão", 
+    tags: ["Dócil", "Sociável"], 
+    image: "/ingatos11.jpg", 
+    descricaoLonga: "Mel é super sociável, adora estar com pessoas e se dá muito bem com outros animais." 
+  },
+  { 
+    id: 12, 
+    nome: "Chico", 
+    idade: "3 Anos", 
+    tipo: "Cão", 
+    tags: ["Dorminhoco", "Comilão"], 
+    image: "/ingatos12.jpg", 
+    descricaoLonga: "Chico é um cãozinho pacato, que ama tirar longas sonecas e é um verdadeiro comilão." 
+  },
 ];
 
 export default function AdocaoLista() {
-  // Estados funcionais para controlar filtros e paginação
   const [especieFiltro, setEspecieFiltro] = useState<"Todos" | "Gato" | "Cão">("Todos");
   const [faseVida, setFaseVida] = useState("Qualquer Idade");
   const [porte, setPorte] = useState("Todos os Portes");
   const [paginaAtual, setPaginaAtual] = useState(1);
+  
+  // Controla qual animal está aberto no Modal
+  const [petSelecionado, setPetSelecionado] = useState<typeof ANIMAIS[0] | null>(null);
 
-  // Filtragem dinâmica dos animais em tempo real
+  // Filtragem dinâmica dos animais
   const animaisFiltrados = ANIMAIS.filter((pet) => {
     if (especieFiltro !== "Todos" && pet.tipo !== especieFiltro) return false;
-    // (Buscadores futuros para idade e porte podem ser acoplados aqui sem quebrar a estrutura)
     return true;
   });
 
-  // Função fictícia para simular a navegação até o perfil
-  const handleVerPerfil = (id: number, nome: string) => {
-    // Substitua pelo seu roteador se preferir, ex: router.push(`/adocao/${id}`)
-    alert(`Redirecionando para o perfil completo de ${nome} (ID: ${id})`);
+  const handleVerPerfil = (pet: typeof ANIMAIS[0]) => {
+    setPetSelecionado(pet);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const fecharModal = () => {
+    setPetSelecionado(null);
+    document.body.style.overflow = 'unset';
+  };
+
+  const handleAdotarWhatsApp = (pet: typeof ANIMAIS[0]) => {
+    const numeroAdmin = "5511999999999"; 
+    const mensagem = `Olá! Tenho interesse em adotar o(a) ${pet.nome} (${pet.tipo} - ID: ${pet.id}) que vi no site do Instituto Ongato. Podemos conversar sobre o processo de adoção?`;
+    const url = `https://wa.me/${numeroAdmin}?text=${encodeURIComponent(mensagem)}`;
+    
+    window.open(url, '_blank');
   };
 
   return (
-    <section className="w-full py-8 md:py-16 bg-white px-4 sm:px-6">
+    <section className="w-full py-8 md:py-16 bg-white px-4 sm:px-6 relative">
       <div className="container mx-auto max-w-6xl">
         
         {/* Título e Descrição */}
@@ -55,7 +164,7 @@ export default function AdocaoLista() {
           </p>
         </div>
 
-        {/* Barra de Filtros Responsiva */}
+        {/* Barra de Filtros Responsiva Restaurada */}
         <div className="bg-slate-50 p-4 sm:p-6 rounded-2xl md:rounded-3xl mb-8 flex flex-col gap-4 shadow-sm">
           <div className="flex items-center gap-2 text-slate-700 font-bold text-xs uppercase tracking-wider border-b border-slate-200/60 pb-2 md:hidden">
             <SlidersHorizontal size={14} /> Filtros de Busca
@@ -74,7 +183,7 @@ export default function AdocaoLista() {
                       type="button"
                       onClick={() => {
                         setEspecieFiltro(tipo);
-                        setPaginaAtual(1); // Reseta a página ao filtrar
+                        setPaginaAtual(1);
                       }}
                       className={`flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
                         especieFiltro === tipo
@@ -127,7 +236,7 @@ export default function AdocaoLista() {
           </div>
         </div>
 
-        {/* Grid Dinâmico de Animais (1 coluna em celulares, 2 em tablets e 4 em desktops) */}
+        {/* Grid Dinâmico de Animais */}
         {animaisFiltrados.length === 0 ? (
           <div className="text-center py-16 border border-dashed border-slate-200 rounded-3xl text-slate-400">
             Nenhum animal encontrado para este filtro específico.
@@ -139,7 +248,6 @@ export default function AdocaoLista() {
                 key={pet.id} 
                 className="bg-white rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-md transition-all group"
               >
-                {/* Imagem responsiva */}
                 <div className="relative w-full aspect-square bg-slate-100">
                   <Image 
                     src={pet.image} 
@@ -172,7 +280,7 @@ export default function AdocaoLista() {
 
                   <Button 
                     type="button"
-                    onClick={() => handleVerPerfil(pet.id, pet.nome)}
+                    onClick={() => handleVerPerfil(pet)} 
                     variant="outline" 
                     className="w-full border-[#7C3AED] text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white rounded-xl py-4 sm:py-5 font-bold group text-xs sm:text-sm transition-all shadow-sm"
                   >
@@ -185,7 +293,7 @@ export default function AdocaoLista() {
           </div>
         )}
 
-        {/* Paginação Interativa */}
+        {/* Paginação Interativa (mantida como no seu original) */}
         <div className="flex justify-center items-center gap-1.5 sm:gap-2 mt-10 md:mt-16">
           <button 
             type="button"
@@ -222,6 +330,106 @@ export default function AdocaoLista() {
         </div>
 
       </div>
+
+      {/* ================= MODAL / BANNER DE PERFIL ================= */}
+      {petSelecionado && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm transition-opacity">
+          
+          {/* Fundo clicável para fechar o modal */}
+          <div className="absolute inset-0" onClick={fecharModal}></div>
+          
+          {/* Caixa de Conteúdo do Modal */}
+          <div className="bg-white rounded-[32px] w-full max-w-4xl max-h-[90vh] overflow-y-auto relative z-10 flex flex-col md:flex-row shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            
+            {/* Botão de Fechar */}
+            <button 
+              onClick={fecharModal}
+              className="absolute top-4 right-4 z-20 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all shadow-sm"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Lado Esquerdo: Galeria de Fotos */}
+            <div className="w-full md:w-1/2 p-4 sm:p-6 bg-slate-50/50 flex flex-col gap-3">
+              {/* Foto Principal */}
+              <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-slate-200 border border-slate-100 shadow-inner">
+                <Image 
+                  src={petSelecionado.image} 
+                  alt={petSelecionado.nome} 
+                  fill 
+                  className="object-cover"
+                />
+              </div>
+              
+              {/* Fotos Menores (Thumbnails) */}
+              <div className="grid grid-cols-3 gap-3">
+                {petSelecionado.fotosAdicionais?.map((foto, index) => (
+                  <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-slate-200 border border-slate-100 hover:opacity-80 transition-opacity cursor-pointer">
+                    <Image src={foto} alt={`${petSelecionado.nome} foto ${index + 1}`} fill className="object-cover" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Lado Direito: Informações e Ação */}
+            <div className="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                    {petSelecionado.nome}
+                  </h2>
+                  <div className={`px-3 py-1 rounded-lg text-xs font-bold text-white uppercase tracking-wider ${
+                    petSelecionado.tipo === 'Gato' ? 'bg-[#7C3AED]' : 'bg-[#FF7A29]'
+                  }`}>
+                    {petSelecionado.tipo}
+                  </div>
+                </div>
+
+                {/* Grid de Dados Rápidos */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Idade</span>
+                    <span className="font-semibold text-slate-700">{petSelecionado.idade}</span>
+                  </div>
+                  <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Personalidade</span>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {petSelecionado.tags.map(tag => (
+                        <span key={tag} className="text-[10px] font-bold text-[#7C3AED] bg-[#F3E8FF] px-2 py-0.5 rounded-md">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-8">
+                  <h3 className="text-sm font-bold text-slate-900 mb-2 uppercase tracking-wider">Sobre a História</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed">
+                    {petSelecionado.descricaoLonga}
+                  </p>
+                </div>
+              </div>
+
+              {/* Botão de Ação WhatsApp */}
+              <div className="pt-6 border-t border-slate-100 mt-auto">
+                <Button 
+                  onClick={() => handleAdotarWhatsApp(petSelecionado)}
+                  className="w-full bg-[#25D366] hover:bg-[#1DA851] text-white py-6 rounded-2xl text-base font-bold shadow-lg shadow-[#25D366]/20 transition-all flex items-center justify-center gap-2"
+                >
+                  <MessageCircle size={20} />
+                  Quero adotar via WhatsApp
+                </Button>
+                <p className="text-center text-[10px] text-slate-400 mt-3 font-medium">
+                  Você será redirecionado para conversar com nossa equipe.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </section>
   );
 }

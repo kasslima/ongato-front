@@ -13,7 +13,7 @@ const slides = [
     title: "Todo gato merece um ",
     titleAccent: "Lar",
     description: "Somos uma organização sem fins lucrativos dedicada a resgatar, reabilitar e encontrar famílias amorosas para gatos.",
-    image: "/ingatos7.jpg", 
+    image: "/banner1.jpg", 
     stats: "100+",
     statsText: "Adoções Felizes"
   },
@@ -23,7 +23,7 @@ const slides = [
     title: "Mude o destino de um ",
     titleAccent: "Gatinho",
     description: "Cada doação nos ajuda a fornecer comida, abrigo e cuidados médicos essenciais para nossos resgatados.",
-    image: "/ingatos8.jpg", 
+    image: "/banner2.jpg", 
     stats: "500kg",
     statsText: "Ração Mensal"
   },
@@ -33,7 +33,7 @@ const slides = [
     title: "Doe seu tempo e ganhe ",
     titleAccent: "Amor",
     description: "Nossos gatinhos precisam de carinho e socialização. Junte-se ao nosso time de voluntários hoje mesmo.",
-    image: "/ingatos9.jpg",
+    image: "/banner3.jpg",
     stats: "24/7",
     statsText: "Cuidado Atento"
   }
@@ -101,15 +101,15 @@ export default function Banner() {
                   {slides[current].description}
                 </p>
 
-                {/* Botões empilhados no mobile, lado a lado no desktop */}
-                <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-3 mt-8 md:mt-10 max-w-xs sm:max-w-none mx-auto md:mx-0">
-                  <Link href="/adocao" className="w-full sm:w-auto">
-                    <button className="w-full sm:w-auto bg-[#FF7A29] hover:bg-[#e66a1f] text-white px-8 py-3.5 md:px-10 md:py-4 rounded-full font-bold transition-all shadow-xl flex items-center justify-center gap-2 text-sm md:text-base">
+                {/* ALTERAÇÃO AQUI: Adicionado items-center e removido os w-full e max-w-xs */}
+                <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3 mt-8 md:mt-10 mx-auto md:mx-0">
+                  <Link href="/adocao">
+                    <button className="bg-[#FF7A29] hover:bg-[#e66a1f] text-white px-8 py-3.5 md:px-10 md:py-4 rounded-full font-bold transition-all shadow-xl flex items-center justify-center gap-2 text-sm md:text-base">
                       Adote Agora <ChevronRight size={18} />
                     </button>
                   </Link>
 
-                  <button className="w-full sm:w-auto bg-white/10 backdrop-blur-md border-2 border-white/20 text-white hover:bg-white/20 px-8 py-3.5 md:px-10 md:py-4 rounded-full font-bold transition-all text-sm md:text-base">
+                  <button className="bg-white/10 backdrop-blur-md border-2 border-white/20 text-white hover:bg-white/20 px-8 py-3.5 md:px-10 md:py-4 rounded-full font-bold transition-all text-sm md:text-base">
                     Saiba Mais
                   </button>
                 </div>

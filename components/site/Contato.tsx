@@ -43,11 +43,11 @@ export default function Contato() {
         {/* Grid de Informações e Formulário */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-12 md:mb-20">
           
-          {/* Coluna Esquerda: Info Cards (Alinhamento centralizado no mobile) */}
+          {/* Coluna Esquerda: Info Cards */}
           <div className="lg:col-span-4 space-y-4 sm:space-y-6 flex flex-col">
             
             {/* Card Endereço */}
-            <div className="flex items-start gap-4 p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex flex-col items-center text-center lg:flex-row lg:items-start lg:text-left gap-4 p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
               <div className="w-10 h-10 bg-[#F3E8FF] text-[#7C3AED] rounded-lg flex items-center justify-center shrink-0">
                 <MapPin size={20} />
               </div>
@@ -60,7 +60,7 @@ export default function Contato() {
             </div>
 
             {/* Card Email */}
-            <div className="flex items-start gap-4 p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex flex-col items-center text-center lg:flex-row lg:items-start lg:text-left gap-4 p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
               <div className="w-10 h-10 bg-[#F3E8FF] text-[#7C3AED] rounded-lg flex items-center justify-center shrink-0">
                 <Mail size={20} />
               </div>
@@ -73,7 +73,7 @@ export default function Contato() {
             </div>
 
             {/* Card Telefone */}
-            <div className="flex items-start gap-4 p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex flex-col items-center text-center lg:flex-row lg:items-start lg:text-left gap-4 p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
               <div className="w-10 h-10 bg-[#F3E8FF] text-[#7C3AED] rounded-lg flex items-center justify-center shrink-0">
                 <Phone size={20} />
               </div>
@@ -86,7 +86,7 @@ export default function Contato() {
             </div>
 
             {/* Redes Sociais */}
-            <div className="pt-2 text-center lg:text-left">
+            <div className="pt-2 flex flex-col items-center lg:items-start text-center lg:text-left">
               <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] block mb-3">
                 Siga nossos resgates
               </span>
@@ -107,8 +107,7 @@ export default function Contato() {
           {/* Coluna Direita: Formulário Interativo */}
           <div className="lg:col-span-8 bg-white p-5 sm:p-8 md:p-10 rounded-[32px] md:rounded-[40px] shadow-sm border border-slate-100">
             {sucesso ? (
-              /* Mensagem de Feedback pós-envio */
-              <div className="flex flex-col items-center justify-center py-12 text-center space-y-4 animate-fadeIn">
+              <div className="flex flex-col items-center justify-center py-12 text-center space-y-4 animate-in fade-in zoom-in duration-300">
                 <CheckCircle2 size={56} className="text-emerald-500 animate-bounce" />
                 <h3 className="text-xl font-bold text-slate-900">Mensagem Enviada!</h3>
                 <p className="text-sm text-slate-500 max-w-sm">
@@ -165,7 +164,7 @@ export default function Contato() {
           {/* Fundo do mapa */}
           <div className="absolute inset-0 opacity-40 mix-blend-overlay grayscale bg-[url('https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/-46.6333,-23.5505,12/1200x450?access_token=YOUR_TOKEN')] bg-cover bg-center" />
           
-          {/* Pin Central Visual (Fica acima no mobile, descentralizado para dar espaço) */}
+          {/* Pin Central Visual */}
           <div className="absolute inset-0 flex items-center justify-center -translate-y-16 lg:translate-y-0">
              <div className="w-32 h-32 md:w-40 md:h-40 bg-white/10 rounded-full animate-ping absolute" />
              <div className="w-16 h-16 md:w-20 md:h-20 bg-white/20 rounded-full flex items-center justify-center relative shadow-2xl">
@@ -173,12 +172,9 @@ export default function Contato() {
              </div>
           </div>
 
-          {/* Card Flutuante do Mapa: 
-            No Mobile: Fixa embaixo cobrindo de ponta a ponta de forma limpa.
-            No Desktop: Flutua no canto inferior esquerdo.
-          */}
-          <div className="absolute bottom-0 left-0 w-full lg:w-auto lg:bottom-8 lg:left-8 lg:max-w-sm bg-white p-6 md:p-8 rounded-t-[24px] lg:rounded-3xl shadow-2xl border-t lg:border border-slate-100 z-10">
-            <div className="flex items-center gap-2 text-[#7C3AED] mb-3">
+          {/* Card Flutuante do Mapa Centralizado no Mobile */}
+          <div className="absolute bottom-0 left-0 w-full lg:w-auto lg:bottom-8 lg:left-8 lg:max-w-sm bg-white p-6 md:p-8 rounded-t-[24px] lg:rounded-3xl shadow-2xl border-t lg:border border-slate-100 z-10 flex flex-col items-center text-center lg:items-start lg:text-left">
+            <div className="flex items-center justify-center lg:justify-start gap-2 text-[#7C3AED] mb-3">
               <PawPrint size={16} fill="currentColor" />
               <span className="text-[10px] font-bold uppercase tracking-widest">Sede Instituto Ongato</span>
             </div>
@@ -188,7 +184,7 @@ export default function Contato() {
             <button 
               type="button" 
               onClick={() => window.open("https://maps.google.com", "_blank")}
-              className="flex items-center gap-2 text-[#7C3AED] font-bold text-xs sm:text-sm hover:underline cursor-pointer group"
+              className="flex items-center justify-center lg:justify-start gap-2 text-[#7C3AED] font-bold text-xs sm:text-sm hover:underline cursor-pointer group w-full lg:w-auto"
             >
               COMO CHEGAR 
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
