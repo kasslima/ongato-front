@@ -6,12 +6,12 @@ import { Star } from "lucide-react";
 export default function Sucesso() {
   const depoimentos = [
     {
-      imagem: "/ingatos5.jpg", // Substitua pelo seu arquivo
+      imagem: "/sucesso1.jpg", // Substitua pelo seu arquivo
       texto: "Adotar o Felix foi a melhor decisão que já tomamos. A equipe do Instituto Ongato tornou a transição muito suave e nos deu todo o apoio.",
       autor: "FAMÍLIA ANDERSON",
     },
     {
-      imagem: "/ingatos6.jpg", // Substitua pelo seu arquivo
+      imagem: "/sucesso2.jpg", // Substitua pelo seu arquivo
       texto: "A Bella trouxe tanta alegria e companheirismo para minha casa. Ela é realmente minha melhor amiga. Obrigada, Ongato!",
       autor: "MARTHA STEWART",
     },
