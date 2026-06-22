@@ -32,7 +32,7 @@ const slides = [
     badge: "Seja um voluntário",
     title: "Doe seu tempo e ganhe ",
     titleAccent: "Amor",
-    description: "Nossos gatinhos precisam de carinho e socialização. Junte-se ao nosso time de voluntários hoje mesmo.",
+    description: "Nossos gatinhos precisam de carinho e socialização. Junte-se ao nosso team de voluntários hoje mesmo.",
     image: "/banner3.jpg",
     stats: "24/7",
     statsText: "Cuidado Atento"
@@ -42,10 +42,11 @@ const slides = [
 export default function Banner() {
   const [current, setCurrent] = useState(0);
 
+  // Ajustado o tempo: passa os slides a cada 9 segundos de forma dinâmica
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-    }, 100000);
+    }, 15000); 
     return () => clearInterval(timer);
   }, []);
 
@@ -64,7 +65,7 @@ export default function Banner() {
           <motion.div 
             initial={{ scale: 1.1 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 10 }}
+            transition={{ duration: 9 }}
             className="relative w-full h-full"
           >
             <Image
@@ -74,7 +75,6 @@ export default function Banner() {
               className="object-cover"
               priority
             />
-            {/* Overlay ligeiramente mais escuro no mobile para salvar a leitura do texto */}
             <div className="absolute inset-0 bg-black/50 md:bg-black/30" />
           </motion.div>
 
@@ -91,7 +91,6 @@ export default function Banner() {
                   {slides[current].badge}
                 </div>
 
-                {/* Tipografia responsiva para evitar quebras gigantes no celular */}
                 <h1 className="text-3xl sm:text-4xl md:text-7xl font-extrabold leading-tight drop-shadow-md">
                   {slides[current].title}
                   <span className="text-[#FF7A29]">{slides[current].titleAccent}</span>.
@@ -101,23 +100,25 @@ export default function Banner() {
                   {slides[current].description}
                 </p>
 
-                {/* ALTERAÇÃO AQUI: Adicionado items-center e removido os w-full e max-w-xs */}
                 <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3 mt-8 md:mt-10 mx-auto md:mx-0">
                   <Link href="/adocao">
-                    <button className="bg-[#FF7A29] hover:bg-[#e66a1f] text-white px-8 py-3.5 md:px-10 md:py-4 rounded-full font-bold transition-all shadow-xl flex items-center justify-center gap-2 text-sm md:text-base">
+                    <button className="bg-[#FF7A29] hover:bg-[#e66a1f] text-white px-8 py-3.5 md:px-10 md:py-4 rounded-full font-bold transition-all shadow-xl flex items-center justify-center gap-2 text-sm md:text-base active:scale-95">
                       Adote Agora <ChevronRight size={18} />
                     </button>
                   </Link>
 
-                  <button className="bg-white/10 backdrop-blur-md border-2 border-white/20 text-white hover:bg-white/20 px-8 py-3.5 md:px-10 md:py-4 rounded-full font-bold transition-all text-sm md:text-base">
-                    Saiba Mais
-                  </button>
+                  {/* Alterado para Link: Redireciona perfeitamente para a página Sobre Nós */}
+                  <Link href="/sobre" className="w-full sm:w-auto">
+                    <button className="w-full bg-white/10 backdrop-blur-md border-2 border-white/20 text-white hover:bg-white/20 px-8 py-3.5 md:px-10 md:py-4 rounded-full font-bold transition-all text-sm md:text-base active:scale-95">
+                      Saiba Mais
+                    </button>
+                  </Link>
                 </div>
               </motion.div>
             </div>
           </div>
 
-          {/* CARD FLUTUANTE (Oculto no mobile 'hidden', visível no desktop 'md:flex') */}
+          {/* CARD FLUTUANTE */}
           <motion.div
             initial={{ x: 50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}

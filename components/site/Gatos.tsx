@@ -2,45 +2,54 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, X, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Gatos() {
   const gatos = [
     {
+      id: 101,
       nome: "Oliver",
       idade: "Filhote",
       tags: ["VACINADO", "BRINCALHÃO"],
       imagem: "/ingatos1.jpg",
+      descricaoLonga: "Oliver é um filhote muito curioso que adora explorar cada cantinho. Se dá super bem com outros animais e é perfeito para famílias com crianças que queiram um companheiro ativo e carinhoso."
     },
     {
+      id: 102,
       nome: "Luna",
       idade: "Sênior",
       tags: ["DÓCIL", "AMIGA DE CRIANÇAS"],
       imagem: "/ingatos2.jpg",
+      descricaoLonga: "Luna é uma gatinha sênior extremamente dócil e tranquila. Ela adora tirar longas sonecas sob o sol e convive muito bem com crianças, ideal para um lar calmo cheio de amor para oferecer."
     },
     {
+      id: 103,
       nome: "Frape",
       idade: "Adulto",
       tags: ["INDEPENDENTE", "CASTRADO"],
       imagem: "/ingatos3.jpg",
+      descricaoLonga: "Frape é um gato independente e muito educado. Já está castrado e gosta do seu próprio espaço, mas não nega um bom carinho na cabeça no final do dia."
     },
     {
+      id: 104,
       nome: "Mochi",
       idade: "Filhote",
       tags: ["ATIVA", "VACINADA"],
       imagem: "/ingatos4.jpg",
+      descricaoLonga: "Mochi é uma filhotinha ligada no duzentos e vinte! Adora brinquedos com penas, bolinhas de plástico e correr pela casa. Já está com as primeiras vacinas em dia."
     },
   ];
 
   const [activeCard, setActiveCard] = useState(0);
+  const [petSelecionado, setPetSelecionado] = useState<typeof gatos[0] | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Função para mover o slide via botões ou automação
   const scrollToSlide = (index: number) => {
     if (scrollRef.current) {
       const cardWidth = scrollRef.current.querySelector('[data-card]')?.getBoundingClientRect().width || 0;
-      const gap = 24; // Equivalente ao gap-6 do Tailwind (24px)
+      const gap = 24; 
       
       scrollRef.current.scrollTo({
         left: index * (cardWidth + gap),
@@ -50,18 +59,17 @@ export default function Gatos() {
     }
   };
 
-  // 1. PASSA SOZINHO (Efeito Automático)
   useEffect(() => {
+    if (petSelecionado) return;
+
     const autoPlay = setInterval(() => {
-      // Se chegar no último gato, volta para o primeiro
       const nextIndex = activeCard === gatos.length - 1 ? 0 : activeCard + 1;
       scrollToSlide(nextIndex);
-    }, 6000); // Muda a cada 6 segundos
+    }, 6000);
 
     return () => clearInterval(autoPlay);
-  }, [activeCard, gatos.length]);
+  }, [activeCard, gatos.length, petSelecionado]);
 
-  // 2. ATUALIZA O PONTINHO SE O USUÁRIO ARRASTAR COM O DEDO
   const handleScroll = () => {
     if (scrollRef.current) {
       const scrollLeft = scrollRef.current.scrollLeft;
@@ -69,20 +77,37 @@ export default function Gatos() {
       const gap = 24;
       
       const index = Math.round(scrollLeft / (cardWidth + gap));
-      // Garante que o estado só mude se o index for diferente (evita re-renders infinitos)
       if (index !== activeCard && index >= 0 && index < gatos.length) {
         setActiveCard(index);
       }
     }
   };
 
+  const handleVerPerfil = (gato: typeof gatos[0]) => {
+    setPetSelecionado(gato);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const fecharModal = () => {
+    setPetSelecionado(null);
+    document.body.style.overflow = 'unset';
+  };
+
+  const handleAdotarWhatsApp = (gato: typeof gatos[0]) => {
+    const numeroAdmin = "5511999999999"; 
+    const mensagem = `Olá! Tenho interesse em adotar o(a) ${gato.nome} (Gato - ID: ${gato.id}) que vi no carrossel de destaques do site do Instituto Ongato. Podemos conversar sobre o processo de adoção?`;
+    const url = `https://wa.me/${numeroAdmin}?text=${encodeURIComponent(mensagem)}`;
+    
+    window.open(url, '_blank');
+  };
+
   return (
-    <section className="py-12 px-4 relative" style={{ background: 'linear-gradient(to bottom, #f3e8ff, #f5f3ff, #ffffff)' }}>
+    <section className="py-12 px-4 relative w-full" style={{ background: 'linear-gradient(to bottom, #f3e8ff, #f5f3ff, #ffffff)' }}>
       <div className="container mx-auto">
         
-        {/* Cabeçalho */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-3">
-          <div>
+        {/* Cabeçalho Ajustado para Centralização Responsiva */}
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-10 gap-4 text-center md:text-left">
+          <div className="flex flex-col items-center md:items-start">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
               Residentes em Destaque
             </h2>
@@ -92,26 +117,26 @@ export default function Gatos() {
           </div>
           <Link 
             href="/adocao" 
-            className="flex items-center gap-2 text-[#7C3AED] font-bold hover:underline group text-sm md:text-base"
+            className="flex items-center gap-2 text-[#7C3AED] font-bold hover:underline group text-sm md:text-base whitespace-nowrap"
           >
             Ver Todos os Gatos 
             <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
 
-        {/* CONTROLLER DO SLIDE (Arraste nativo + Snap Magnético) */}
+        {/* CONTROLLER DO SLIDE CORRIGIDO PARA CELULAR */}
         <div className="relative w-full">
           <div 
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex flex-row overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-x-visible sm:pb-0"
-            style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }} // Remove barras visíveis no Mobile
+            className="flex flex-row overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-x-visible sm:pb-0 px-[7.5vw] sm:px-0"
+            style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}
           >
             {gatos.map((gato, index) => (
               <div 
                 key={index} 
                 data-card
-                className="min-w-[85vw] sm:min-w-0 bg-white rounded-[32px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 snap-center"
+                className="min-w-[85vw] sm:min-w-0 bg-white rounded-[32px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 snap-center flex flex-col justify-between"
               >
                 {/* Imagem */}
                 <div className="relative h-64 w-full">
@@ -127,23 +152,28 @@ export default function Gatos() {
                 </div>
 
                 {/* Informações */}
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold text-slate-900 mb-3">
-                    {gato.nome}
-                  </h3>
-                  
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {gato.tags.map((tag) => (
-                      <span 
-                        key={tag} 
-                        className="bg-purple-50 text-[#7C3AED] text-[10px] font-bold px-3 py-1 rounded-md"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                <div className="p-6 flex flex-col justify-between flex-1">
+                  <div>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-3">
+                      {gato.nome}
+                    </h3>
+                    
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {gato.tags.map((tag) => (
+                        <span 
+                          key={tag} 
+                          className="bg-purple-50 text-[#7C3AED] text-[10px] font-bold px-3 py-1 rounded-md"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
 
-                  <button className="w-full border-2 border-[#7C3AED] text-[#7C3AED] py-2.5 rounded-full font-bold text-sm hover:bg-[#7C3AED] hover:text-white transition-colors">
+                  <button 
+                    onClick={() => handleVerPerfil(gato)}
+                    className="w-full border-2 border-[#7C3AED] text-[#7C3AED] py-2.5 rounded-full font-bold text-sm hover:bg-[#7C3AED] hover:text-white transition-colors active:scale-98"
+                  >
                     Conhecer {gato.nome}
                   </button>
                 </div>
@@ -151,7 +181,7 @@ export default function Gatos() {
             ))}
           </div>
 
-          {/* BOTÕES GRANDES PARA CELULAR (Fáceis de clicar com o dedão) */}
+          {/* BOTÕES GRANDES PARA CELULAR */}
           <div className="flex justify-between items-center mt-4 sm:hidden px-2">
             <button 
               onClick={() => scrollToSlide(activeCard === 0 ? gatos.length - 1 : activeCard - 1)}
@@ -161,7 +191,7 @@ export default function Gatos() {
               <ChevronLeft size={24} />
             </button>
 
-            {/* PONTINHOS INDICADORES (Centralizados entre os botões) */}
+            {/* PONTINHOS INDICADORES */}
             <div className="flex gap-2">
               {gatos.map((_, index) => (
                 <button
@@ -185,6 +215,87 @@ export default function Gatos() {
         </div>
 
       </div>
+
+      {/* ================= MODAL DE PERFIL INTEGRADO ================= */}
+      {petSelecionado && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm transition-opacity">
+          
+          <div className="absolute inset-0" onClick={fecharModal}></div>
+          
+          <div className="bg-white rounded-[32px] w-full max-w-4xl max-h-[90vh] overflow-y-auto relative z-10 flex flex-col md:flex-row shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            
+            <button 
+              onClick={fecharModal}
+              className="absolute top-4 right-4 z-20 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all shadow-sm"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="w-full md:w-1/2 p-4 sm:p-6 bg-slate-50/50 flex flex-col gap-3">
+              <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-slate-200 border border-slate-100 shadow-inner">
+                <Image 
+                  src={petSelecionado.imagem} 
+                  alt={petSelecionado.nome} 
+                  fill 
+                  className="object-cover"
+                />
+              </div>
+            </div>
+
+            <div className="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                    {petSelecionado.nome}
+                  </h2>
+                  <div className="px-3 py-1 rounded-lg text-xs font-bold text-white uppercase tracking-wider bg-[#7C3AED]">
+                    Gato
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Fase da Vida</span>
+                    <span className="font-semibold text-slate-700">{petSelecionado.idade}</span>
+                  </div>
+                  <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Personalidade</span>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {petSelecionado.tags.map(tag => (
+                        <span key={tag} className="text-[10px] font-bold text-[#7C3AED] bg-[#F3E8FF] px-2 py-0.5 rounded-md">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-8">
+                  <h3 className="text-sm font-bold text-slate-900 mb-2 uppercase tracking-wider">Sobre a História</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed">
+                    {petSelecionado.descricaoLonga}
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-slate-100 mt-auto">
+                <Button 
+                  onClick={() => handleAdotarWhatsApp(petSelecionado)}
+                  className="w-full bg-[#25D366] hover:bg-[#1DA851] text-white py-6 rounded-2xl text-base font-bold shadow-lg shadow-[#25D366]/20 transition-all flex items-center justify-center gap-2"
+                >
+                  <MessageCircle size={20} />
+                  Quero adotar via WhatsApp
+                </Button>
+                <p className="text-center text-[10px] text-slate-400 mt-3 font-medium">
+                  Você será redirecionado para conversar com nossa equipe.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </section>
   );
 }
