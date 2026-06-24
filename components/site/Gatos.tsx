@@ -5,46 +5,35 @@ import Image from "next/image";
 import { ArrowRight, ChevronLeft, ChevronRight, X, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getAnimalAttributes, getAnimals, getAnimalTypeLabel } from "@/lib/animals";
+import { Animal } from "@/types/animais";
 
 export default function Gatos() {
-  const gatos = [
-    {
-      id: 101,
-      nome: "Oliver",
-      idade: "Filhote",
-      tags: ["VACINADO", "BRINCALHÃO"],
-      imagem: "/ingatos1.jpg",
-      descricaoLonga: "Oliver é um filhote muito curioso que adora explorar cada cantinho. Se dá super bem com outros animais e é perfeito para famílias com crianças que queiram um companheiro ativo e carinhoso."
-    },
-    {
-      id: 102,
-      nome: "Luna",
-      idade: "Sênior",
-      tags: ["DÓCIL", "AMIGA DE CRIANÇAS"],
-      imagem: "/ingatos2.jpg",
-      descricaoLonga: "Luna é uma gatinha sênior extremamente dócil e tranquila. Ela adora tirar longas sonecas sob o sol e convive muito bem com crianças, ideal para um lar calmo cheio de amor para oferecer."
-    },
-    {
-      id: 103,
-      nome: "Frape",
-      idade: "Adulto",
-      tags: ["INDEPENDENTE", "CASTRADO"],
-      imagem: "/ingatos3.jpg",
-      descricaoLonga: "Frape é um gato independente e muito educado. Já está castrado e gosta do seu próprio espaço, mas não nega um bom carinho na cabeça no final do dia."
-    },
-    {
-      id: 104,
-      nome: "Mochi",
-      idade: "Filhote",
-      tags: ["ATIVA", "VACINADA"],
-      imagem: "/ingatos4.jpg",
-      descricaoLonga: "Mochi é uma filhotinha ligada no duzentos e vinte! Adora brinquedos com penas, bolinhas de plástico e correr pela casa. Já está com as primeiras vacinas em dia."
-    },
-  ];
-
+  const [gatos, setGatos] = useState<Animal[]>([]);
   const [activeCard, setActiveCard] = useState(0);
-  const [petSelecionado, setPetSelecionado] = useState<typeof gatos[0] | null>(null);
+  const [petSelecionado, setPetSelecionado] = useState<Animal | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    getAnimals({ featured: true, limit: 4 })
+      .then((animals) => {
+        if (active) setGatos(animals.filter((animal) => animal.featured).slice(0, 4));
+      })
+      .catch((error) => console.error("Erro ao buscar animais em destaque:", error));
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = petSelecionado ? "hidden" : "unset";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [petSelecionado]);
 
   const scrollToSlide = (index: number) => {
     if (scrollRef.current) {
@@ -60,7 +49,7 @@ export default function Gatos() {
   };
 
   useEffect(() => {
-    if (petSelecionado) return;
+    if (petSelecionado || gatos.length < 2) return;
 
     const autoPlay = setInterval(() => {
       const nextIndex = activeCard === gatos.length - 1 ? 0 : activeCard + 1;
@@ -83,19 +72,17 @@ export default function Gatos() {
     }
   };
 
-  const handleVerPerfil = (gato: typeof gatos[0]) => {
+  const handleVerPerfil = (gato: Animal) => {
     setPetSelecionado(gato);
-    document.body.style.overflow = 'hidden';
   };
 
   const fecharModal = () => {
     setPetSelecionado(null);
-    document.body.style.overflow = 'unset';
   };
 
-  const handleAdotarWhatsApp = (gato: typeof gatos[0]) => {
+  const handleAdotarWhatsApp = (gato: Animal) => {
     const numeroAdmin = "5511999999999"; 
-    const mensagem = `Olá! Tenho interesse em adotar o(a) ${gato.nome} (Gato - ID: ${gato.id}) que vi no carrossel de destaques do site do Instituto Ongato. Podemos conversar sobre o processo de adoção?`;
+    const mensagem = `Olá! Tenho interesse em adotar o(a) ${gato.name} (${getAnimalTypeLabel(gato.type)} - ID: ${gato.id}) que vi no carrossel de destaques do site do Instituto Ongato. Podemos conversar sobre o processo de adoção?`;
     const url = `https://wa.me/${numeroAdmin}?text=${encodeURIComponent(mensagem)}`;
     
     window.open(url, '_blank');
@@ -132,22 +119,22 @@ export default function Gatos() {
             className="flex flex-row overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-x-visible sm:pb-0 px-[7.5vw] sm:px-0"
             style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}
           >
-            {gatos.map((gato, index) => (
+            {gatos.map((gato) => (
               <div 
-                key={index} 
+                key={gato.id} 
                 data-card
                 className="min-w-[85vw] sm:min-w-0 bg-white rounded-[32px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 snap-center flex flex-col justify-between"
               >
                 {/* Imagem */}
                 <div className="relative h-64 w-full">
                   <Image
-                    src={gato.imagem}
-                    alt={gato.nome}
+                    src={gato.imageUrl}
+                    alt={gato.name}
                     fill
                     className="object-cover"
                   />
                   <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-1 rounded-full text-[10px] font-bold text-[#7C3AED] uppercase tracking-wider">
-                    {gato.idade}
+                    {gato.age}
                   </div>
                 </div>
 
@@ -155,11 +142,11 @@ export default function Gatos() {
                 <div className="p-6 flex flex-col justify-between flex-1">
                   <div>
                     <h3 className="text-2xl font-bold text-slate-900 mb-3">
-                      {gato.nome}
+                      {gato.name}
                     </h3>
                     
                     <div className="flex flex-wrap gap-2 mb-6">
-                      {gato.tags.map((tag) => (
+                      {getAnimalAttributes(gato.attributes).map((tag) => (
                         <span 
                           key={tag} 
                           className="bg-purple-50 text-[#7C3AED] text-[10px] font-bold px-3 py-1 rounded-md"
@@ -174,7 +161,7 @@ export default function Gatos() {
                     onClick={() => handleVerPerfil(gato)}
                     className="w-full border-2 border-[#7C3AED] text-[#7C3AED] py-2.5 rounded-full font-bold text-sm hover:bg-[#7C3AED] hover:text-white transition-colors active:scale-98"
                   >
-                    Conhecer {gato.nome}
+                    Conhecer {gato.name}
                   </button>
                 </div>
               </div>
@@ -182,7 +169,7 @@ export default function Gatos() {
           </div>
 
           {/* BOTÕES GRANDES PARA CELULAR */}
-          <div className="flex justify-between items-center mt-4 sm:hidden px-2">
+          {gatos.length > 1 && <div className="flex justify-between items-center mt-4 sm:hidden px-2">
             <button 
               onClick={() => scrollToSlide(activeCard === 0 ? gatos.length - 1 : activeCard - 1)}
               className="bg-white border border-slate-200 text-slate-700 active:bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center shadow-md transition-all"
@@ -211,7 +198,7 @@ export default function Gatos() {
             >
               <ChevronRight size={24} />
             </button>
-          </div>
+          </div>}
         </div>
 
       </div>
@@ -234,8 +221,8 @@ export default function Gatos() {
             <div className="w-full md:w-1/2 p-4 sm:p-6 bg-slate-50/50 flex flex-col gap-3">
               <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-slate-200 border border-slate-100 shadow-inner">
                 <Image 
-                  src={petSelecionado.imagem} 
-                  alt={petSelecionado.nome} 
+                  src={petSelecionado.imageUrl} 
+                  alt={petSelecionado.name} 
                   fill 
                   className="object-cover"
                 />
@@ -246,22 +233,22 @@ export default function Gatos() {
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                    {petSelecionado.nome}
+                    {petSelecionado.name}
                   </h2>
                   <div className="px-3 py-1 rounded-lg text-xs font-bold text-white uppercase tracking-wider bg-[#7C3AED]">
-                    Gato
+                    {getAnimalTypeLabel(petSelecionado.type)}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
                     <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Fase da Vida</span>
-                    <span className="font-semibold text-slate-700">{petSelecionado.idade}</span>
+                    <span className="font-semibold text-slate-700">{petSelecionado.age}</span>
                   </div>
                   <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
                     <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Personalidade</span>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {petSelecionado.tags.map(tag => (
+                      {getAnimalAttributes(petSelecionado.attributes).map(tag => (
                         <span key={tag} className="text-[10px] font-bold text-[#7C3AED] bg-[#F3E8FF] px-2 py-0.5 rounded-md">
                           {tag}
                         </span>
@@ -273,7 +260,7 @@ export default function Gatos() {
                 <div className="mb-8">
                   <h3 className="text-sm font-bold text-slate-900 mb-2 uppercase tracking-wider">Sobre a História</h3>
                   <p className="text-slate-500 text-sm leading-relaxed">
-                    {petSelecionado.descricaoLonga}
+                    {petSelecionado.description}
                   </p>
                 </div>
               </div>

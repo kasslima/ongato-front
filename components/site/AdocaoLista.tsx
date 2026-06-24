@@ -1,165 +1,59 @@
 'use client'
 
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, ArrowRight, Search, SlidersHorizontal, X, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-// 1. Atualizado: Adicionado os campos 'faseVida' e 'porte' para os filtros funcionarem
-const ANIMAIS = [
-  { 
-    id: 1, 
-    nome: "Luna", 
-    idade: "2 Anos", 
-    tipo: "Gato", 
-    faseVida: "Adulto",
-    porte: "Pequeno",
-    tags: ["Brincalhona", "Vacinada", "Castrada"], 
-    image: "/ingatos1.jpg",
-    descricaoLonga: "Luna é uma gatinha cheia de energia e amor para dar. Foi resgatada nas ruas, mas logo mostrou ser super dócil. Adora brincar com bolinhas de papel e dormir no sol da tarde. Já está castrada, vacinada e vermifugada, pronta para encher sua casa de alegria."
-  },
-  { 
-    id: 2, 
-    nome: "Oliver", 
-    idade: "5 Meses", 
-    tipo: "Gato", 
-    faseVida: "Filhote",
-    porte: "Pequeno",
-    tags: ["Energético", "Dócil"], 
-    image: "/ingatos2.jpg",
-    descricaoLonga: "Oliver é um filhote muito curioso que adora explorar cada cantinho. Se dá super bem com outros animais e é perfeito para famílias com crianças."
-  },
-  { 
-    id: 3, 
-    nome: "Max", 
-    idade: "1 Ano", 
-    tipo: "Gato", 
-    faseVida: "Adulto",
-    porte: "Médio",
-    tags: ["Leal", "Ama Passear"], 
-    image: "/ingatos3.jpg", 
-    descricaoLonga: "Max é um gato leal, companheiro e muito tranquilo. Gosta de observar o movimento e tirar longas sonecas." 
-  },
-  { 
-    id: 4, 
-    nome: "Bella", 
-    idade: "4 Anos", 
-    tipo: "Gato", 
-    faseVida: "Adulto",
-    porte: "Pequeno",
-    tags: ["Calma", "Caseira"], 
-    image: "/ingatos4.jpg", 
-    descricaoLonga: "Bella é super caseira e calma, ideal para quem busca uma companhia silenciosa e carinhosa para o dia a dia." 
-  },
-  { 
-    id: 5, 
-    nome: "Milo", 
-    idade: "1 Ano", 
-    tipo: "Gato", 
-    faseVida: "Adulto",
-    porte: "Pequeno",
-    tags: ["Tímido", "Gentil"], 
-    image: "/ingatos5.jpg", 
-    descricaoLonga: "Milo é um pouco tímido no começo, mas logo se revela um gatinho extremamente gentil e apegado." 
-  },
-  { 
-    id: 6, 
-    nome: "Daisy", 
-    idade: "3 Anos", 
-    tipo: "Gato", 
-    faseVida: "Adulto",
-    porte: "Médio",
-    tags: ["Amigável", "Adestrada"], 
-    image: "/ingatos6.jpg", 
-    descricaoLonga: "Daisy é muito amigável, sociável e super receptiva a novas pessoas. Um doce de felino." 
-  },
-  { 
-    id: 7, 
-    nome: "Simba", 
-    idade: "6 Anos", 
-    tipo: "Cão", 
-    faseVida: "Sênior",
-    porte: "Grande",
-    tags: ["Carinhoso", "Sênior"], 
-    image: "/ingatos7.jpg", 
-    descricaoLonga: "Simba é um cãozinho sênior muito experiente, extremamente carinhoso e que só quer uma caminha quentinha." 
-  },
-  { 
-    id: 8, 
-    nome: "Mocha", 
-    idade: "2 Anos", 
-    tipo: "Cão", 
-    faseVida: "Adulto",
-    porte: "Médio",
-    tags: ["Independente", "Vocal"], 
-    image: "/ingatos8.jpg", 
-    descricaoLonga: "Mocha tem uma personalidade independente e adora demonstrar sua alegria emitindo sons fofos." 
-  },
-  { 
-    id: 9, 
-    nome: "Pipoca", 
-    idade: "3 Meses", 
-    tipo: "Cão", 
-    faseVida: "Filhote",
-    porte: "Pequeno",
-    tags: ["Curioso", "Vacinado"], 
-    image: "/ingatos9.jpg", 
-    descricaoLonga: "Pipoca é um filhote muito curioso e cheio de energia, já com a vacinação em dia." 
-  },
-  { 
-    id: 10, 
-    nome: "Thor", 
-    idade: "2 Anos", 
-    tipo: "Cão", 
-    faseVida: "Adulto",
-    porte: "Grande",
-    tags: ["Protetor", "Brincalhão"], 
-    image: "/ingatos10.jpg", 
-    descricaoLonga: "Thor é um cão de guarda nato, protetor, mas que adora uma boa brincadeira com bolinhas." 
-  },
-  { 
-    id: 11, 
-    nome: "Mel", 
-    idade: "8 Meses", 
-    tipo: "Cão", 
-    faseVida: "Filhote",
-    porte: "Médio",
-    tags: ["Dócil", "Sociável"], 
-    image: "/ingatos11.jpg", 
-    descricaoLonga: "Mel é super sociável, adora estar com pessoas e se dá muito bem com outros animais." 
-  },
-  { 
-    id: 12, 
-    nome: "Chico", 
-    idade: "3 Anos", 
-    tipo: "Cão", 
-    faseVida: "Adulto",
-    porte: "Pequeno",
-    tags: ["Dorminhoco", "Comilão"], 
-    image: "/ingatos12.jpg", 
-    descricaoLonga: "Chico é um cãozinho pacato, que ama tirar longas sonecas e é um verdadeiro comilão." 
-  },
-];
+import {
+  getAnimalAttributes,
+  getAnimalLifeStage,
+  getAnimals,
+  getAnimalSizeLabel,
+  getAnimalTypeLabel,
+} from "@/lib/animals";
+import { Animal } from "@/types/animais";
 
 const ITENS_POR_PAGINA = 4; // Quantidade de pets exibidos por página
 
 export default function AdocaoLista() {
+  const [animais, setAnimais] = useState<Animal[]>([]);
   const [especieFiltro, setEspecieFiltro] = useState<"Todos" | "Gato" | "Cão">("Todos");
   const [faseVida, setFaseVida] = useState("Qualquer Idade");
   const [porte, setPorte] = useState("Todos os Portes");
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const [petSelecionado, setPetSelecionado] = useState<typeof ANIMAIS[0] | null>(null);
+  const [petSelecionado, setPetSelecionado] = useState<Animal | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    const type = especieFiltro === "Gato" ? "gato" : especieFiltro === "Cão" ? "cachorro" : undefined;
+
+    getAnimals({ type, limit: 100 })
+      .then((animals) => {
+        if (active) setAnimais(animals);
+      })
+      .catch((error) => console.error("Erro ao buscar animais para adoção:", error));
+
+    return () => {
+      active = false;
+    };
+  }, [especieFiltro]);
+
+  useEffect(() => {
+    document.body.style.overflow = petSelecionado ? "hidden" : "unset";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [petSelecionado]);
 
   // 2. Corrigido: Filtragem dinâmica agora engloba todos os filtros
   const animaisFiltrados = useMemo(() => {
-    return ANIMAIS.filter((pet) => {
-      const bateEspecie = especieFiltro === "Todos" || pet.tipo === especieFiltro;
-      const bateFase = faseVida === "Qualquer Idade" || pet.faseVida === faseVida;
-      const batePorte = porte === "Todos os Portes" || pet.porte === porte;
+    return animais.filter((pet) => {
+      const bateFase = faseVida === "Qualquer Idade" || getAnimalLifeStage(pet.age) === faseVida;
+      const batePorte = porte === "Todos os Portes" || getAnimalSizeLabel(pet.size) === porte;
 
-      return bateEspecie && bateFase && batePorte;
+      return bateFase && batePorte;
     });
-  }, [especieFiltro, faseVida, porte]);
+  }, [animais, faseVida, porte]);
 
   // 3. Adicionado: Paginação real baseada nos itens filtrados
   const totalPaginas = Math.ceil(animaisFiltrados.length / ITENS_POR_PAGINA);
@@ -170,19 +64,17 @@ export default function AdocaoLista() {
     return animaisFiltrados.slice(inicio, fim);
   }, [animaisFiltrados, paginaAtual]);
 
-  const handleVerPerfil = (pet: typeof ANIMAIS[0]) => {
+  const handleVerPerfil = (pet: Animal) => {
     setPetSelecionado(pet);
-    document.body.style.overflow = 'hidden';
   };
 
   const fecharModal = () => {
     setPetSelecionado(null);
-    document.body.style.overflow = 'unset';
   };
 
-  const handleAdotarWhatsApp = (pet: typeof ANIMAIS[0]) => {
+  const handleAdotarWhatsApp = (pet: Animal) => {
     const numeroAdmin = "5511999999999"; 
-    const mensagem = `Olá! Tenho interesse em adotar o(a) ${pet.nome} (${pet.tipo} - ID: ${pet.id}) que vi no site do Instituto Ongato. Podemos conversar sobre o processo de adoção?`;
+    const mensagem = `Olá! Tenho interesse em adotar o(a) ${pet.name} (${getAnimalTypeLabel(pet.type)} - ID: ${pet.id}) que vi no site do Instituto Ongato. Podemos conversar sobre o processo de adoção?`;
     const url = `https://wa.me/${numeroAdmin}?text=${encodeURIComponent(mensagem)}`;
     window.open(url, '_blank');
   };
@@ -293,28 +185,28 @@ export default function AdocaoLista() {
               >
                 <div className="relative w-full aspect-square bg-slate-100">
                   <Image 
-                    src={pet.image} 
-                    alt={pet.nome} 
+                    src={pet.imageUrl} 
+                    alt={pet.name} 
                     fill 
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    priority={pet.id <= 4}
+                    priority={false}
                   />
                   <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-md text-[9px] font-bold text-white uppercase tracking-wider ${
-                    pet.tipo === 'Gato' ? 'bg-[#7C3AED]' : 'bg-[#FF7A29]'
+                    pet.type === 'gato' ? 'bg-[#7C3AED]' : 'bg-[#FF7A29]'
                   }`}>
-                    {pet.tipo}
+                    {getAnimalTypeLabel(pet.type)}
                   </div>
                 </div>
                 
                 <div className="p-4 sm:p-5">
                   <div className="flex justify-between items-center mb-2.5">
-                    <h3 className="text-lg sm:text-xl font-bold text-slate-800 tracking-tight">{pet.nome}</h3>
-                    <span className="text-xs sm:text-sm text-slate-400 font-medium">{pet.idade}</span>
+                    <h3 className="text-lg sm:text-xl font-bold text-slate-800 tracking-tight">{pet.name}</h3>
+                    <span className="text-xs sm:text-sm text-slate-400 font-medium">{pet.age}</span>
                   </div>
                   
                   <div className="flex flex-wrap gap-1.5 mb-5">
-                    {pet.tags.map((tag) => (
+                    {getAnimalAttributes(pet.attributes).map((tag) => (
                       <span key={tag} className="px-2.5 py-0.5 bg-[#F3E8FF] text-[#7C3AED] rounded-full text-[9px] sm:text-[10px] font-bold">
                         {tag}
                       </span>
@@ -394,8 +286,8 @@ export default function AdocaoLista() {
             <div className="w-full md:w-1/2 p-4 sm:p-6 bg-slate-50/50 flex flex-col gap-3">
               <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-slate-200 border border-slate-100 shadow-inner">
                 <Image 
-                  src={petSelecionado.image} 
-                  alt={petSelecionado.nome} 
+                  src={petSelecionado.imageUrl} 
+                  alt={petSelecionado.name} 
                   fill 
                   className="object-cover"
                 />
@@ -407,24 +299,24 @@ export default function AdocaoLista() {
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                    {petSelecionado.nome}
+                    {petSelecionado.name}
                   </h2>
                   <div className={`px-3 py-1 rounded-lg text-xs font-bold text-white uppercase tracking-wider ${
-                    petSelecionado.tipo === 'Gato' ? 'bg-[#7C3AED]' : 'bg-[#FF7A29]'
+                    petSelecionado.type === 'gato' ? 'bg-[#7C3AED]' : 'bg-[#FF7A29]'
                   }`}>
-                    {petSelecionado.tipo}
+                    {getAnimalTypeLabel(petSelecionado.type)}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
                     <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Idade</span>
-                    <span className="font-semibold text-slate-700">{petSelecionado.idade}</span>
+                    <span className="font-semibold text-slate-700">{petSelecionado.age}</span>
                   </div>
                   <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
                     <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Personalidade</span>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {petSelecionado.tags.map(tag => (
+                      {getAnimalAttributes(petSelecionado.attributes).map(tag => (
                         <span key={tag} className="text-[10px] font-bold text-[#7C3AED] bg-[#F3E8FF] px-2 py-0.5 rounded-md">
                           {tag}
                         </span>
@@ -436,7 +328,7 @@ export default function AdocaoLista() {
                 <div className="mb-8">
                   <h3 className="text-sm font-bold text-slate-900 mb-2 uppercase tracking-wider">Sobre a História</h3>
                   <p className="text-slate-500 text-sm leading-relaxed">
-                    {petSelecionado.descricaoLonga}
+                    {petSelecionado.description}
                   </p>
                 </div>
               </div>

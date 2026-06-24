@@ -6,7 +6,7 @@ export type Animal = {
   gender: "macho" | "femea";
   size: "pequeno" | "medio" | "grande";
   type: "gato" | "cachorro";
-  description: string;
+  description: string | null;
   featured: boolean;
   attributes: string | null;
   createdAt: string;
@@ -19,4 +19,5 @@ export type GetAnimalsParams = {
   name?: string;
   type?: "gato" | "cachorro";
   gender?: "macho" | "femea";
+  featured?: boolean;
 };
