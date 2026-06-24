@@ -7,6 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Plus, X } from "lucide-react";
+
+type AnimalFormData = {
+  name: string;
+  age: Animal["age"];
+  gender: Animal["gender"];
+  size: Animal["size"];
+  type: Animal["type"];
+  description: string;
+  featured: boolean;
+  attributes: string | null;
+};
 
 type AnimalModalProps = {
   isOpen: boolean;
@@ -16,14 +28,18 @@ type AnimalModalProps = {
 };
 
 export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalProps) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AnimalFormData>({
     name: "",
     age: "0 a 6 meses",
     gender: "macho",
     size: "pequeno",
     type: "gato",
     description: "",
+    featured: false,
+    attributes: null,
   });
+  const [attributeInput, setAttributeInput] = useState("");
+  const [attributes, setAttributes] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -36,7 +52,15 @@ export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalPr
         size: animal.size,
         type: animal.type,
         description: animal.description || "",
+        featured: animal.featured ?? false,
+        attributes: animal.attributes ?? null,
       });
+      setAttributes(
+        (animal.attributes || "")
+          .split(",")
+          .map((attribute) => attribute.trim())
+          .filter(Boolean),
+      );
     } else {
       setFormData({
         name: "",
@@ -45,16 +69,39 @@ export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalPr
         size: "pequeno",
         type: "gato",
         description: "",
+        featured: false,
+        attributes: null,
       });
+      setAttributes([]);
     }
+    setAttributeInput("");
     setFile(null);
   }, [animal, isOpen]);
+
+  const addAttribute = () => {
+    const attribute = attributeInput.trim();
+    if (!attribute || /[\s,]/.test(attribute)) return;
+    if (attributes.some((item) => item.toLocaleLowerCase() === attribute.toLocaleLowerCase())) {
+      setAttributeInput("");
+      return;
+    }
+
+    setAttributes((current) => [...current, attribute]);
+    setAttributeInput("");
+  };
+
+  const removeAttribute = (attribute: string) => {
+    setAttributes((current) => current.filter((item) => item !== attribute));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      const attributesValue = attributes.length > 0 ? attributes.join(", ") : null;
+      const payload = { ...formData, attributes: attributesValue };
+
       if (file || !animal) {
         // Multipart if there is a file or it's a new animal (image required by swagger)
         const data = new FormData();
@@ -64,12 +111,19 @@ export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalPr
         data.append("size", formData.size);
         data.append("type", formData.type);
         data.append("description", formData.description);
+        data.append("featured", String(payload.featured));
+        if (payload.attributes) {
+          data.append("attributes", payload.attributes);
+        } else if (animal) {
+          // Em uma edição multipart, a string vazia informa à API que os atributos foram removidos.
+          data.append("attributes", "");
+        }
         if (file) data.append("image", file);
         
         await onSubmit(data);
       } else {
         // JSON if no file and it's an update
-        await onSubmit(formData);
+        await onSubmit(payload);
       }
       onClose();
     } catch (error: any) {
@@ -193,6 +247,67 @@ export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalPr
               required
             />
           </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="attribute">Atributos</Label>
+            <div className="flex gap-2">
+              <Input
+                id="attribute"
+                value={attributeInput}
+                onChange={(e) => setAttributeInput(e.target.value.replace(/[\s,]/g, ""))}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addAttribute();
+                  }
+                }}
+                placeholder="Ex: fofo"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={addAttribute}
+                disabled={!attributeInput.trim()}
+                aria-label="Adicionar atributo"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            {attributes.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {attributes.map((attribute) => (
+                  <span
+                    key={attribute}
+                    className="inline-flex items-center gap-1 rounded-full bg-neutral-800 px-3 py-1 text-xs text-neutral-100"
+                  >
+                    {attribute}
+                    <button
+                      type="button"
+                      onClick={() => removeAttribute(attribute)}
+                      className="rounded-full text-neutral-400 hover:text-white"
+                      aria-label={`Remover ${attribute}`}
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+            <p className="text-[11px] text-neutral-400">
+              Digite uma palavra e clique em + ou pressione Enter.
+            </p>
+          </div>
+
+          <label className="flex cursor-pointer items-center gap-3 rounded-md border border-neutral-800 p-3">
+            <input
+              type="checkbox"
+              checked={formData.featured}
+              onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+              className="h-4 w-4 accent-white"
+            />
+            <span className="text-sm text-neutral-100">Exibir este animal como destaque</span>
+          </label>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose} disabled={loading}>

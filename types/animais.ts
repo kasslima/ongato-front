@@ -7,6 +7,8 @@ export type Animal = {
   size: "pequeno" | "medio" | "grande";
   type: "gato" | "cachorro";
   description: string;
+  featured: boolean;
+  attributes: string | null;
   createdAt: string;
   updatedAt: string;
 };
