@@ -36,11 +36,12 @@ const EVENTOS = [
 export default function EventosLista() {
   return (
     <section className="w-full py-16 bg-white">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 ">
         
         {/* Cabeçalho */}
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">Próximos Eventos</h1> border-[#FF7A29
+          {/* CORREÇÃO: Removido o trecho de código quebrado 'border-[#FF7A29' */}
+          <h1 className="text-4xl font-bold text-slate-900 mb-4">Próximos Eventos</h1>
           <p className="text-slate-500 max-w-2xl leading-relaxed">
             Participe das nossas feiras de adoção, workshops educacionais e mutirões. Juntos, podemos fazer muito mais pela causa felina.
           </p>
@@ -55,13 +56,14 @@ export default function EventosLista() {
             >
               {/* Lado Esquerdo: Data e Info */}
               <div className="flex items-start gap-6 flex-1">
-                {/* Bloco de Data Espelhado no estilo do Site */}
+                
+                {/* Bloco de Data (Garante que exiba o Dia e o Mês Corretamente) */}
                 <div className="w-20 h-20 bg-[#F3E8FF] rounded-2xl flex flex-col items-center justify-center text-center shrink-0 border border-[#7C3AED]/10">
                   <span className="text-xs font-bold text-[#7C3AED] uppercase tracking-wider">
-                    {evento.data.split(" ")[2]}
+                    {evento.data.split(" ")[2]} {/* Captura o 'Mai' ou 'Jun' */}
                   </span>
                   <span className="text-2xl font-black text-[#7C3AED] leading-none">
-                    {evento.data.split(" ")[0]}
+                    {evento.data.split(" ")[0]} {/* Captura o número '24', '07', etc. */}
                   </span>
                 </div>
 
@@ -72,7 +74,9 @@ export default function EventosLista() {
                       {evento.status}
                     </span>
                   </div>
-                  <h3 className="text-xl md:text-2xl font-bold text-slate-900 group-hover:text-[#7C3AED] transition-colors">
+                  
+                  {/* Título com hover dinâmico combinando com o botão */}
+                  <h3 className="text-xl md:text-2xl font-bold text-slate-900 group-hover:text-[#FF7A29] transition-colors">
                     {evento.titulo}
                   </h3>
                   <p className="text-sm text-slate-400 leading-relaxed max-w-2xl">
@@ -82,26 +86,16 @@ export default function EventosLista() {
                   {/* Meta dados (Hora e Local) */}
                   <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs font-medium text-slate-400 pt-1">
                     <div className="flex items-center gap-1.5">
-                      <Clock size={14} className="text-[#7C3AED]" />
+                      <Clock size={14} className="text-[#FF7A29]" />
                       {evento.horario}
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <MapPin size={14} className="text-[#7C3AED]" />
+                      <MapPin size={14} className="text-[#FF7A29]" />
                       {evento.local}
                     </div>
                   </div>
                 </div>
               </div>
-
-              {/* Lado Direito: Botão de Ação */}
-              <div className="w-full md:w-auto shrink-0 pt-4 md:pt-0 border-t md:border-t-0 border-slate-100 flex md:justify-end">
-                <Button 
-                  className="w-full md:w-auto bg-[#FF7A29] hover:bg-[#e66a1f] text-white py-6 px-8 rounded-xl font-bold transition-all shadow-md shadow-orange-100 flex items-center justify-center gap-2"
-                >
-                  Participar <ArrowRight size={16} />
-                </Button>
-              </div>
-
             </div>
           ))}
         </div>
