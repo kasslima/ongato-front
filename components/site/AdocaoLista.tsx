@@ -11,6 +11,7 @@ import {
   getAnimalSizeLabel,
   getAnimalTypeLabel,
 } from "@/lib/animals";
+import { siteConfig } from "@/lib/site";
 import { Animal } from "@/types/animais";
 
 const ITENS_POR_PAGINA = 4; // Quantidade de pets exibidos por página
@@ -73,8 +74,8 @@ export default function AdocaoLista() {
   };
 
   const handleAdotarWhatsApp = (pet: Animal) => {
-    const numeroAdmin = "5511999999999"; 
-    const mensagem = `Olá! Tenho interesse em adotar o(a) ${pet.name} (${getAnimalTypeLabel(pet.type)} - ID: ${pet.id}) que vi no site do Instituto Ongato. Podemos conversar sobre o processo de adoção?`;
+    const numeroAdmin = siteConfig.whatsapp; 
+    const mensagem = `Olá! Tenho interesse em adotar o(a) ${pet.name} (${getAnimalTypeLabel(pet.type)} - ID: ${pet.id}) que vi no site do Instituto Ongato em Manaus. Podemos conversar sobre o processo de adoção?`;
     const url = `https://wa.me/${numeroAdmin}?text=${encodeURIComponent(mensagem)}`;
     window.open(url, '_blank');
   };
@@ -86,10 +87,10 @@ export default function AdocaoLista() {
         {/* Título e Descrição */}
         <div className="mb-8 md:mb-12 text-center sm:text-left">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-3 md:mb-4 tracking-tight">
-            Encontre seu Companheiro Ideal
+            Animais para adoção em Manaus
           </h1>
           <p className="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
-            Cada residente do Instituto Ongato tem uma história. Explore nossos cães e gatos disponíveis e ajude-nos a escrever o próximo capítulo deles em um lar definitivo e amoroso.
+            Cada residente do Instituto Ongato tem uma história. Explore cães e gatos disponíveis para adoção em Manaus e ajude-nos a escrever o próximo capítulo deles em um lar definitivo e amoroso.
           </p>
         </div>
 
@@ -174,7 +175,7 @@ export default function AdocaoLista() {
         {/* Grid Dinâmico de Animais (Usa animaisPaginados em vez de animaisFiltrados) */}
         {animaisPaginados.length === 0 ? (
           <div className="text-center py-16 border border-dashed border-slate-200 rounded-3xl text-slate-400">
-            Nenhum animal encontrado para este filtro específico.
+            Nenhum animal para adoção em Manaus encontrado para este filtro específico.
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -186,7 +187,7 @@ export default function AdocaoLista() {
                 <div className="relative w-full aspect-square bg-slate-100">
                   <Image 
                     src={pet.imageUrl} 
-                    alt={pet.name} 
+                    alt={`${pet.name}, ${getAnimalTypeLabel(pet.type)} para adoção em Manaus`} 
                     fill 
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -287,7 +288,7 @@ export default function AdocaoLista() {
               <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-slate-200 border border-slate-100 shadow-inner">
                 <Image 
                   src={petSelecionado.imageUrl} 
-                  alt={petSelecionado.name} 
+                  alt={`${petSelecionado.name}, ${getAnimalTypeLabel(petSelecionado.type)} para adoção em Manaus`} 
                   fill 
                   className="object-cover"
                 />

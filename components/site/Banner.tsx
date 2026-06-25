@@ -10,9 +10,9 @@ const slides = [
   {
     id: 1,
     badge: "Bem-vindo ao Instituto Ongato",
-    title: "Todo gato merece um ",
-    titleAccent: "Lar",
-    description: "Somos uma organização sem fins lucrativos dedicada a resgatar, reabilitar e encontrar famílias amorosas para gatos.",
+    title: "Adoção de animais em ",
+    titleAccent: "Manaus",
+    description: "Somos uma ONG de animais em Manaus dedicada a resgatar, reabilitar e encontrar famílias amorosas para gatos e cães.",
     image: "/banner1.jpg", 
     stats: "100+",
     statsText: "Adoções Felizes"
@@ -22,7 +22,7 @@ const slides = [
     badge: "Sua ajuda salva vidas",
     title: "Mude o destino de um ",
     titleAccent: "Gatinho",
-    description: "Cada doação nos ajuda a fornecer comida, abrigo e cuidados médicos essenciais para nossos resgatados.",
+    description: "Cada doação ajuda animais resgatados em Manaus com comida, abrigo e cuidados médicos essenciais.",
     image: "/banner2.jpg", 
     stats: "500kg",
     statsText: "Ração Mensal"
@@ -32,15 +32,20 @@ const slides = [
     badge: "Seja um voluntário",
     title: "Doe seu tempo e ganhe ",
     titleAccent: "Amor",
-    description: "Nossos gatinhos precisam de carinho e socialização. Junte-se ao nosso team de voluntários hoje mesmo.",
+    description: "Nossos gatinhos precisam de carinho e socialização. Junte-se ao nosso time de voluntários em Manaus hoje mesmo.",
     image: "/banner3.jpg",
     stats: "24/7",
     statsText: "Cuidado Atento"
   }
 ];
 
-export default function Banner() {
+type BannerProps = {
+  headingLevel?: "h1" | "h2";
+};
+
+export default function Banner({ headingLevel = "h1" }: BannerProps) {
   const [current, setCurrent] = useState(0);
+  const HeadingTag = headingLevel;
 
   // Ajustado o tempo: passa os slides a cada 15 segundos de forma dinâmica
   useEffect(() => {
@@ -70,7 +75,7 @@ export default function Banner() {
           >
             <Image
               src={slides[current].image}
-              alt="Instituto Ongato"
+              alt="Gato resgatado pelo Instituto Ongato em Manaus"
               fill
               className="object-cover"
               priority
@@ -91,10 +96,10 @@ export default function Banner() {
                   {slides[current].badge}
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl md:text-7xl font-extrabold leading-tight drop-shadow-md">
+                <HeadingTag className="text-3xl sm:text-4xl md:text-7xl font-extrabold leading-tight drop-shadow-md">
                   {slides[current].title}
                   <span className="text-[#FF7A29]">{slides[current].titleAccent}</span>.
-                </h1>
+                </HeadingTag>
 
                 <p className="text-slate-200 md:text-slate-100 text-sm sm:text-base md:text-xl max-w-lg mt-4 md:mt-6 drop-shadow-sm mx-auto md:mx-0">
                   {slides[current].description}

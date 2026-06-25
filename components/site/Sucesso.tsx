@@ -42,7 +42,7 @@ export default function Sucesso() {
               <div className="relative w-full md:w-1/2 h-64 md:h-auto min-h-[260px] md:min-h-full shrink-0">
                 <Image
                   src={item.imagem}
-                  alt={item.autor}
+                  alt={`História de adoção em Manaus - ${item.autor}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"

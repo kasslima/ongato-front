@@ -5,6 +5,7 @@ import { MapPin, Mail, Phone, ExternalLink, Share2, Video, ArrowRight, PawPrint,
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { siteConfig } from "@/lib/site";
 
 export default function Contato() {
   // Estados para gerenciar as ações do formulário
@@ -33,10 +34,10 @@ export default function Contato() {
         {/* Cabeçalho */}
         <div className="text-center mb-10 md:mb-16">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-3 md:mb-4 tracking-tight">
-            Entre em Contato
+            Contato da ONG em Manaus
           </h1>
           <p className="text-slate-500 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Estamos aqui para ajudar você a encontrar seu companheiro felino perfeito ou tirar qualquer dúvida sobre nossos programas de bem-estar.
+            Estamos aqui para ajudar você a encontrar seu companheiro em Manaus ou tirar qualquer dúvida sobre adoção, doações e nossos programas de bem-estar animal.
           </p>
         </div>
 
@@ -54,7 +55,7 @@ export default function Contato() {
               <div>
                 <h3 className="font-bold text-slate-900 text-sm sm:text-base">Visite-nos</h3>
                 <p className="text-xs sm:text-sm text-slate-500 leading-relaxed mt-1">
-                  Rua dos Gatos, 123, Vila Felina<br />São Paulo, SP 01234-567
+                  Atendimento em Manaus, AM<br />Visitas somente com agendamento
                 </p>
               </div>
             </div>
@@ -67,7 +68,7 @@ export default function Contato() {
               <div className="min-w-0 flex-1">
                 <h3 className="font-bold text-slate-900 text-sm sm:text-base">E-mail</h3>
                 <p className="text-xs sm:text-sm text-slate-500 leading-relaxed mt-1 break-words">
-                  contato@institutoongato.org<br />adocoes@institutoongato.org
+                  {siteConfig.email}<br />adocoes@ongato.org.br
                 </p>
               </div>
             </div>
@@ -80,7 +81,7 @@ export default function Contato() {
               <div>
                 <h3 className="font-bold text-slate-900 text-sm sm:text-base">Ligue para nós</h3>
                 <p className="text-xs sm:text-sm text-slate-500 leading-relaxed mt-1">
-                  +55 (11) 98765-4321<br />Seg-Sex: 9h - 18h
+                  {siteConfig.phone}<br />Seg-Sex: 9h - 18h
                 </p>
               </div>
             </div>
@@ -162,7 +163,7 @@ export default function Contato() {
         <div className="relative w-full h-[500px] md:h-[450px] rounded-[32px] md:rounded-[40px] overflow-hidden bg-[#2D3139] flex flex-col lg:block">
           
           {/* Fundo do mapa */}
-          <div className="absolute inset-0 opacity-40 mix-blend-overlay grayscale bg-[url('https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/-46.6333,-23.5505,12/1200x450?access_token=YOUR_TOKEN')] bg-cover bg-center" />
+          <div className="absolute inset-0 opacity-40 mix-blend-overlay grayscale bg-[url('https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/-60.0217,-3.1190,12/1200x450?access_token=YOUR_TOKEN')] bg-cover bg-center" />
           
           {/* Pin Central Visual */}
           <div className="absolute inset-0 flex items-center justify-center -translate-y-16 lg:translate-y-0">
@@ -179,11 +180,11 @@ export default function Contato() {
               <span className="text-[10px] font-bold uppercase tracking-widest">Sede Instituto Ongato</span>
             </div>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4 md:mb-6">
-              Nosso santuário está aberto apenas para visitas agendadas para garantir um ambiente calmo para nossos residentes.
+              Nosso atendimento em Manaus acontece apenas com visitas agendadas para garantir um ambiente calmo para nossos residentes.
             </p>
             <button 
               type="button" 
-              onClick={() => window.open("https://maps.google.com", "_blank")}
+              onClick={() => window.open("https://www.google.com/maps/search/?api=1&query=Instituto%20Ongato%20Manaus%20AM", "_blank")}
               className="flex items-center justify-center lg:justify-start gap-2 text-[#7C3AED] font-bold text-xs sm:text-sm hover:underline cursor-pointer group w-full lg:w-auto"
             >
               COMO CHEGAR 

@@ -1,16 +1,15 @@
 'use client'
 
-import { Calendar, MapPin, Clock, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MapPin, Clock } from "lucide-react";
 
 const EVENTOS = [
   {
     id: 1,
-    titulo: "Feira de Adoção Responsável: Encontre seu Miau",
+    titulo: "Feira de Adoção Responsável em Manaus",
     data: "24 de Mai",
     horario: "10:00 às 16:00",
-    local: "Parque da Cidade, Espaço Pet - São Paulo, SP",
-    descricao: "Venha conhecer nossos gatinhos resgatados que estão à procura de um lar amoroso. Teremos orientações veterinárias e lojinha beneficente.",
+    local: "Manaus, AM - local divulgado após confirmação",
+    descricao: "Venha conhecer gatos e cães resgatados em Manaus que estão à procura de um lar amoroso. Teremos orientações veterinárias e lojinha beneficente.",
     status: "Gratuito",
   },
   {
@@ -27,8 +26,8 @@ const EVENTOS = [
     titulo: "Mutirão de Voluntariado no Santuário",
     data: "21 de Jun",
     horario: "09:00 às 15:00",
-    local: "Sede Instituto Ongato - São Paulo, SP",
-    descricao: "Dia de cuidar do nosso espaço! Ajude na organização das salas, manutenção dos parquinhos dos gatos e, claro, dê muito carinho aos nossos residentes.",
+    local: "Sede Instituto Ongato - Manaus, AM",
+    descricao: "Dia de cuidar do nosso espaço! Ajude na organização das salas, manutenção dos ambientes dos animais e, claro, dê muito carinho aos nossos residentes.",
     status: "Vagas Limitadas",
   },
 ];
@@ -41,9 +40,9 @@ export default function EventosLista() {
         {/* Cabeçalho */}
         <div className="mb-12">
           {/* CORREÇÃO: Removido o trecho de código quebrado 'border-[#FF7A29' */}
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">Próximos Eventos</h1>
+          <h1 className="text-4xl font-bold text-slate-900 mb-4">Eventos de adoção em Manaus</h1>
           <p className="text-slate-500 max-w-2xl leading-relaxed">
-            Participe das nossas feiras de adoção, workshops educacionais e mutirões. Juntos, podemos fazer muito mais pela causa felina.
+            Participe das nossas feiras de adoção, workshops educacionais e mutirões em Manaus. Juntos, podemos fazer muito mais pela causa animal.
           </p>
         </div>
 

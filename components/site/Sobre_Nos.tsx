@@ -2,11 +2,16 @@
 
 import { Heart, ShieldCheck, Users, PawPrint } from "lucide-react";
 
-export default function NossaInstituicao() {
+type NossaInstituicaoProps = {
+  headingLevel?: "h1" | "h2";
+};
+
+export default function NossaInstituicao({ headingLevel = "h2" }: NossaInstituicaoProps) {
+  const HeadingTag = headingLevel;
   const pilares = [
     {
       titulo: "Nossa Missão",
-      descricao: "Resgatar, reabilitar e encontrar lares amorosos para felinos em situação de risco, garantindo uma segunda chance digna a cada um deles.",
+      descricao: "Resgatar, reabilitar e encontrar lares amorosos para felinos em situação de risco em Manaus, garantindo uma segunda chance digna a cada um deles.",
       icone: <Heart className="w-6 h-6 text-[#7C3AED]" />,
       bgColor: "bg-purple-100",
     },
@@ -30,12 +35,12 @@ export default function NossaInstituicao() {
         
         {/* Cabeçalho da Seção */}
         <div className="text-center mb-10 md:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-3 md:mb-4 tracking-tight">
-            Sobre Nossa Instituição
-          </h2>
+          <HeadingTag className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-3 md:mb-4 tracking-tight">
+            Sobre nossa ONG de animais em Manaus
+          </HeadingTag>
           <p className="text-slate-500 max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed">
             Somos uma organização sem fins lucrativos movida pelo amor e pelo compromisso 
-            de transformar a realidade dos gatos abandonados na nossa região.
+            de transformar a realidade dos gatos e cães abandonados em Manaus.
           </p>
         </div>
 

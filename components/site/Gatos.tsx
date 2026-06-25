@@ -6,6 +6,7 @@ import { ArrowRight, ChevronLeft, ChevronRight, X, MessageCircle } from "lucide-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getAnimalAttributes, getAnimals, getAnimalTypeLabel } from "@/lib/animals";
+import { siteConfig } from "@/lib/site";
 import { Animal } from "@/types/animais";
 
 export default function Gatos() {
@@ -81,8 +82,8 @@ export default function Gatos() {
   };
 
   const handleAdotarWhatsApp = (gato: Animal) => {
-    const numeroAdmin = "5511999999999"; 
-    const mensagem = `Olá! Tenho interesse em adotar o(a) ${gato.name} (${getAnimalTypeLabel(gato.type)} - ID: ${gato.id}) que vi no carrossel de destaques do site do Instituto Ongato. Podemos conversar sobre o processo de adoção?`;
+    const numeroAdmin = siteConfig.whatsapp; 
+    const mensagem = `Olá! Tenho interesse em adotar o(a) ${gato.name} (${getAnimalTypeLabel(gato.type)} - ID: ${gato.id}) que vi no carrossel de destaques do site do Instituto Ongato em Manaus. Podemos conversar sobre o processo de adoção?`;
     const url = `https://wa.me/${numeroAdmin}?text=${encodeURIComponent(mensagem)}`;
     
     window.open(url, '_blank');
@@ -96,17 +97,17 @@ export default function Gatos() {
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-10 gap-4 text-center md:text-left">
           <div className="flex flex-col items-center md:items-start">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
-              Residentes em Destaque
+              Animais em destaque para adoção
             </h2>
             <p className="text-slate-500 text-base md:text-lg">
-              Conheça alguns dos nossos gatos à espera de alguém especial.
+              Conheça alguns gatos e cães resgatados em Manaus à espera de alguém especial.
             </p>
           </div>
           <Link 
             href="/adocao" 
             className="flex items-center gap-2 text-[#7C3AED] font-bold hover:underline group text-sm md:text-base whitespace-nowrap"
           >
-            Ver Todos os Gatos 
+            Ver animais para adoção 
             <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
@@ -129,7 +130,7 @@ export default function Gatos() {
                 <div className="relative h-64 w-full">
                   <Image
                     src={gato.imageUrl}
-                    alt={gato.name}
+                    alt={`${gato.name}, ${getAnimalTypeLabel(gato.type)} para adoção em Manaus`}
                     fill
                     className="object-cover"
                   />
@@ -222,7 +223,7 @@ export default function Gatos() {
               <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-slate-200 border border-slate-100 shadow-inner">
                 <Image 
                   src={petSelecionado.imageUrl} 
-                  alt={petSelecionado.name} 
+                  alt={`${petSelecionado.name}, ${getAnimalTypeLabel(petSelecionado.type)} para adoção em Manaus`} 
                   fill 
                   className="object-cover"
                 />

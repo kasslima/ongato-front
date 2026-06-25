@@ -29,7 +29,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center gap-2 lg:gap-3 active:scale-95 transition-transform">
             <Image 
               src="/ongato-logo.png" 
-              alt="Instituto Ongato" 
+              alt="Instituto Ongato - ONG de animais em Manaus" 
               width={48} 
               height={48} 
               className="w-11 h-11 lg:w-14 lg:h-14 object-contain shrink-0" 

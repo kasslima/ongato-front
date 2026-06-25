@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CreditCard, QrCode, Lock, Utensils, BriefcaseMedical, Home, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { siteConfig } from "@/lib/site";
 
 export default function DoacaoCheckout() {
   // Estados para controlar a seleção do usuário
@@ -43,7 +44,7 @@ export default function DoacaoCheckout() {
   ];
 
   const handleCopyPix = () => {
-    navigator.clipboard.writeText("00020101021126580014br.gov.bcb.pix0136contato@ongato.org.br5204000053039865406150.005802BR5916INSTITUTO ONGATO6009SAO PAULO62070503***6304E2B1");
+    navigator.clipboard.writeText(process.env.NEXT_PUBLIC_PIX_KEY || siteConfig.email);
     setCopiouPix(true);
     setTimeout(() => setCopiouPix(false), 2000);
   };
@@ -54,8 +55,8 @@ export default function DoacaoCheckout() {
         
         {/* Cabeçalho */}
         <div className="text-center mb-8 md:mb-12">
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Escolha seu Impacto</h1>
-          <p className="text-sm sm:text-base text-slate-500">Sua generosidade move nossa missão</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Doe para ajudar animais resgatados em Manaus</h1>
+          <p className="text-sm sm:text-base text-slate-500">Sua doação para ONG de animais ajuda com ração, abrigo e cuidados veterinários</p>
         </div>
 
         {/* Grid de Impacto Responsivo */}
@@ -209,7 +210,10 @@ export default function DoacaoCheckout() {
           </Button>
 
           <p className="text-center text-[10px] text-slate-400 mt-4 flex items-center justify-center gap-1">
-            <Lock size={10} /> Sua transação é criptografada e segura
+            <Lock size={10} /> Doação segura para o Instituto Ongato em Manaus
+          </p>
+          <p className="text-center text-[10px] text-slate-400 mt-2">
+            CNPJ: {siteConfig.cnpj} • PIX oficial: {process.env.NEXT_PUBLIC_PIX_KEY || siteConfig.email}
           </p>
         </div>
 

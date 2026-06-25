@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Mail, MapPin, ExternalLink, Share2, PawPrint } from "lucide-react";
+import { siteConfig } from "@/lib/site";
 
 export default function Footer() {
   return (
@@ -19,7 +20,7 @@ export default function Footer() {
               <span className="text-xl md:text-2xl font-bold tracking-tight">Instituto Ongato</span>
             </div>
             <p className="text-slate-500 text-xs md:text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
-              Dedicados a transformar vidas através do resgate, reabilitação e adoção responsável de felinos.
+              Dedicados a transformar vidas em Manaus através do resgate, reabilitação e adoção responsável de gatos e cães.
             </p>
           </div>
 
@@ -28,9 +29,9 @@ export default function Footer() {
             <h3 className="text-xs font-bold uppercase tracking-widest text-slate-900 mt-2 md:mt-0">Institucional</h3>
             <ul className="flex flex-col items-center md:items-start space-y-2 text-xs md:text-sm text-slate-500">
               <li><Link href="/sobre" className="hover:text-[#7C3AED] transition-colors block py-0.5">Sobre Nós</Link></li>
-              <li><Link href="/voluntariado" className="hover:text-[#7C3AED] transition-colors block py-0.5">Seja Voluntário</Link></li>
-              <li><Link href="/historias" className="hover:text-[#7C3AED] transition-colors block py-0.5">Histórias de Sucesso</Link></li>
-              <li><Link href="/privacidade" className="hover:text-[#7C3AED] transition-colors block py-0.5">Política de Privacidade</Link></li>
+              <li><Link href="/adocao" className="hover:text-[#7C3AED] transition-colors block py-0.5">Animais para Adoção</Link></li>
+              <li><Link href="/doar" className="hover:text-[#7C3AED] transition-colors block py-0.5">Doar para a ONG</Link></li>
+              <li><Link href="/contato" className="hover:text-[#7C3AED] transition-colors block py-0.5">Contato em Manaus</Link></li>
             </ul>
           </div>
 
@@ -40,13 +41,13 @@ export default function Footer() {
             <ul className="flex flex-col items-center md:items-start space-y-2 text-xs md:text-sm text-slate-500">
               <li className="flex items-center gap-2 max-w-full">
                 <Mail size={16} className="text-[#7C3AED] shrink-0" />
-                <span className="truncate block" title="contato@ongato.org.br">
-                  contato@ongato.org.br
+                <span className="truncate block" title={siteConfig.email}>
+                  {siteConfig.email}
                 </span>
               </li>
               <li className="flex items-center gap-2">
                 <MapPin size={16} className="text-[#7C3AED] shrink-0" />
-                <span>São Paulo, SP</span>
+                <span>{siteConfig.address}</span>
               </li>
             </ul>
           </div>
@@ -56,7 +57,7 @@ export default function Footer() {
             <h3 className="text-xs font-bold uppercase tracking-widest text-slate-900 mt-2 md:mt-0">Redes Sociais</h3>
             <div className="flex gap-3 justify-center md:justify-start">
               <Link 
-                href="https://instagram.com" 
+                href={siteConfig.instagram} 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white transition-all shadow-sm shrink-0"
@@ -77,7 +78,7 @@ export default function Footer() {
         {/* Linha Inferior: Copyright */}
         <div className="pt-6 border-t border-slate-200/60 flex flex-col-reverse md:flex-row justify-between items-center gap-3 text-center md:text-left">
           <p className="text-[11px] text-slate-400 leading-relaxed max-w-2xl">
-            © 2026 Instituto Ongato. CNPJ: 00.000.000/0001-00. Todos os direitos reservados.
+            © 2026 Instituto Ongato. CNPJ: {siteConfig.cnpj}. Todos os direitos reservados.
           </p>
           <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400 shrink-0">
             Feito com amor por amantes de felinos 🐾
