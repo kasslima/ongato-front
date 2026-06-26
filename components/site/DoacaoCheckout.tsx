@@ -43,11 +43,6 @@ export default function DoacaoCheckout() {
     }
   ];
 
-  const handleCopyPix = () => {
-    navigator.clipboard.writeText(process.env.NEXT_PUBLIC_PIX_KEY || siteConfig.email);
-    setCopiouPix(true);
-    setTimeout(() => setCopiouPix(false), 2000);
-  };
 
   return (
     <section className="w-full py-10 md:py-16 bg-slate-50 px-4 sm:px-6">
@@ -213,7 +208,7 @@ export default function DoacaoCheckout() {
             <Lock size={10} /> Doação segura para o Instituto Ongato em Manaus
           </p>
           <p className="text-center text-[10px] text-slate-400 mt-2">
-            CNPJ: {siteConfig.cnpj} • PIX oficial: {process.env.NEXT_PUBLIC_PIX_KEY || siteConfig.email}
+            CNPJ: {siteConfig.cnpj}
           </p>
         </div>
 
