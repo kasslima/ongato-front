@@ -10,7 +10,7 @@ export async function getAnimals(params: GetAnimalsParams = {}) {
   if (params.gender) query.set("gender", params.gender);
   if (params.featured) query.set("featured", "1");
 
-  const response = await apiFetch(`/api/animals?${query.toString()}`);
+  const response = await apiFetch(`/animals?${query.toString()}`);
   if (!response.ok) await throwApiError(response, "Falha ao buscar animais");
   
   const data = await response.json();
