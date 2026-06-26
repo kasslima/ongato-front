@@ -186,7 +186,6 @@ export default function DoacaoCheckout() {
               </div>
               <button
                 type="button"
-                onClick={handleCopyPix}
                 className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all border ${
                   copiouPix 
                     ? "bg-emerald-50 text-emerald-600 border-emerald-200" 
@@ -198,11 +197,6 @@ export default function DoacaoCheckout() {
               </button>
             </div>
           )}
-
-          {/* Botão de Ação Principal */}
-          <Button className="w-full bg-[#FF7A29] hover:bg-[#e66a1f] text-white py-6 md:py-7 rounded-xl font-bold text-base mt-6 md:mt-8 shadow-md transition-all">
-            {metodoPagamento === "cartao" ? "Confirmar Doação" : "Já realizei o PIX"}
-          </Button>
 
           <p className="text-center text-[10px] text-slate-400 mt-4 flex items-center justify-center gap-1">
             <Lock size={10} /> Doação segura para o Instituto Ongato em Manaus
