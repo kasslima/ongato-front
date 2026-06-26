@@ -7,32 +7,66 @@ import { getUsers, deleteUser, createUser } from "@/lib/users";
 import { User } from "@/types/usuarios";
 import { UsuarioModal } from "./UsuarioModal";
 
+type StatusMessage = {
+  type: "success" | "error";
+  text: string;
+};
+
 export default function UsuariosPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<{ name?: string }>({});
+  const [message, setMessage] = useState<StatusMessage | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (showError = true) => {
     try {
       setLoading(true);
       const data = await getUsers(filter);
       setUsers(data);
-    } catch (error) { console.error("Erro ao buscar usuários:", error); }
-    finally { setLoading(false); }
+      return true;
+    } catch (error) {
+      console.error("Erro ao buscar usuarios:", error);
+      if (showError) {
+        setMessage({ type: "error", text: "Nao foi possivel carregar os usuarios." });
+      }
+      return false;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => { fetchUsers(); }, [filter]);
+  useEffect(() => {
+    fetchUsers();
+  }, [filter]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Tem certeza que deseja excluir este usuário?")) return;
-    try { await deleteUser(Number(id)); fetchUsers(); }
-    catch (error) { console.error("Erro ao excluir usuário:", error); }
+    if (!confirm("Tem certeza que deseja excluir este usuario?")) return;
+
+    try {
+      await deleteUser(Number(id));
+      const refreshed = await fetchUsers(false);
+      setMessage({
+        type: refreshed ? "success" : "error",
+        text: refreshed
+          ? "Usuario excluido com sucesso."
+          : "Usuario excluido, mas nao foi possivel atualizar a lista.",
+      });
+    } catch (error) {
+      console.error("Erro ao excluir usuario:", error);
+      setMessage({ type: "error", text: error instanceof Error ? error.message : "Erro ao excluir usuario." });
+    }
   };
 
   const handleSubmit = async (data: { name: string; email: string; password: string; role?: "admin" | "dev" }) => {
     await createUser(data);
-    fetchUsers();
+    const refreshed = await fetchUsers(false);
+    setMessage({
+      type: refreshed ? "success" : "error",
+      text: refreshed
+        ? "Usuario cadastrado com sucesso."
+        : "Registro salvo, mas nao foi possivel atualizar a lista.",
+    });
   };
 
   const crudItems = users.map((u) => ({
@@ -41,9 +75,9 @@ export default function UsuariosPage() {
       nome: u.name,
       email: u.email,
       perfil: u.role === "admin" ? "Administrador" : "Dev",
-      criado: u.createdAt ? new Date(u.createdAt).toLocaleDateString("pt-BR") : "—",
+      criado: u.createdAt ? new Date(u.createdAt).toLocaleDateString("pt-BR") : "-",
     },
-    raw: u
+    raw: u,
   }));
 
   return (
@@ -65,6 +99,8 @@ export default function UsuariosPage() {
           { key: "criado", label: "Criado em", placeholder: "Ex: 01/01/2026" },
         ]}
         items={crudItems}
+        loading={loading}
+        message={message}
         onDelete={handleDelete}
       />
       <UsuarioModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit} />

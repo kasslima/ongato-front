@@ -7,21 +7,32 @@ import { getEvents, deleteEvent, createEvent, updateEvent } from "@/lib/events";
 import { Event } from "@/types/eventos";
 import { EventoModal } from "./EventoModal";
 
+type StatusMessage = {
+  type: "success" | "error";
+  text: string;
+};
+
 export default function EventosPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<{ title?: string }>({});
+  const [message, setMessage] = useState<StatusMessage | null>(null);
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEvento, setEditingEvento] = useState<Event | null>(null);
 
-  const fetchEvents = async () => {
+  const fetchEvents = async (showError = true) => {
     try {
       setLoading(true);
       const data = await getEvents(filter);
       setEvents(data);
+      return true;
     } catch (error) {
       console.error("Erro ao buscar eventos:", error);
+      if (showError) {
+        setMessage({ type: "error", text: "Nao foi possivel carregar os eventos." });
+      }
+      return false;
     } finally {
       setLoading(false);
     }
@@ -35,9 +46,16 @@ export default function EventosPage() {
     if (!confirm("Tem certeza que deseja excluir este evento?")) return;
     try {
       await deleteEvent(Number(id));
-      fetchEvents();
+      const refreshed = await fetchEvents(false);
+      setMessage({
+        type: refreshed ? "success" : "error",
+        text: refreshed
+          ? "Evento excluido com sucesso."
+          : "Evento excluido, mas nao foi possivel atualizar a lista.",
+      });
     } catch (error) {
       console.error("Erro ao excluir evento:", error);
+      setMessage({ type: "error", text: error instanceof Error ? error.message : "Erro ao excluir evento." });
     }
   };
 
@@ -51,13 +69,22 @@ export default function EventosPage() {
     setIsModalOpen(true);
   };
 
-  const handleSubmit = async (data: FormData | Record<string, any>) => {
+  const handleSubmit = async (data: FormData | Record<string, unknown>) => {
+    const isEditing = Boolean(editingEvento);
     if (editingEvento) {
       await updateEvent(editingEvento.id, data);
     } else {
       await createEvent(data as FormData);
     }
-    fetchEvents();
+    const refreshed = await fetchEvents(false);
+    setMessage({
+      type: refreshed ? "success" : "error",
+      text: refreshed
+        ? isEditing
+          ? "Evento atualizado com sucesso."
+          : "Evento cadastrado com sucesso."
+        : "Registro salvo, mas nao foi possivel atualizar a lista.",
+    });
   };
 
   const crudItems = events.map((e) => ({
@@ -89,6 +116,8 @@ export default function EventosPage() {
           { key: "criado", label: "Criado em", placeholder: "Ex: 01/01/2026" },
         ]}
         items={crudItems}
+        loading={loading}
+        message={message}
         onDelete={handleDelete}
         onEdit={(item) => handleOpenEdit(item.raw as Event)}
       />

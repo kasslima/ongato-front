@@ -7,20 +7,31 @@ import { getBanners, deleteBanner, createBanner, updateBanner } from "@/lib/bann
 import { Banner } from "@/types/banners";
 import { BannerModal } from "./BannerModal";
 
+type StatusMessage = {
+  type: "success" | "error";
+  text: string;
+};
+
 export default function BannersPage() {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<{ title?: string }>({});
+  const [message, setMessage] = useState<StatusMessage | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
 
-  const fetchBanners = async () => {
+  const fetchBanners = async (showError = true) => {
     try {
       setLoading(true);
       const data = await getBanners(filter);
       setBanners(data);
+      return true;
     } catch (error) {
       console.error("Erro ao buscar banners:", error);
+      if (showError) {
+        setMessage({ type: "error", text: "Nao foi possivel carregar os banners." });
+      }
+      return false;
     } finally {
       setLoading(false);
     }
@@ -30,14 +41,35 @@ export default function BannersPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Tem certeza que deseja excluir este banner?")) return;
-    try { await deleteBanner(Number(id)); fetchBanners(); }
-    catch (error) { console.error("Erro ao excluir banner:", error); }
+    try {
+      await deleteBanner(Number(id));
+      const refreshed = await fetchBanners(false);
+      setMessage({
+        type: refreshed ? "success" : "error",
+        text: refreshed
+          ? "Banner excluido com sucesso."
+          : "Banner excluido, mas nao foi possivel atualizar a lista.",
+      });
+    }
+    catch (error) {
+      console.error("Erro ao excluir banner:", error);
+      setMessage({ type: "error", text: error instanceof Error ? error.message : "Erro ao excluir banner." });
+    }
   };
 
-  const handleSubmit = async (data: FormData | Record<string, any>) => {
+  const handleSubmit = async (data: FormData | Record<string, unknown>) => {
+    const isEditing = Boolean(editingBanner);
     if (editingBanner) { await updateBanner(editingBanner.id, data); }
     else { await createBanner(data as FormData); }
-    fetchBanners();
+    const refreshed = await fetchBanners(false);
+    setMessage({
+      type: refreshed ? "success" : "error",
+      text: refreshed
+        ? isEditing
+          ? "Banner atualizado com sucesso."
+          : "Banner cadastrado com sucesso."
+        : "Registro salvo, mas nao foi possivel atualizar a lista.",
+    });
   };
 
   const crudItems = banners.map((b) => ({
@@ -69,6 +101,8 @@ export default function BannersPage() {
           { key: "criado", label: "Criado em", placeholder: "Ex: 01/01/2026" },
         ]}
         items={crudItems}
+        loading={loading}
+        message={message}
         onDelete={handleDelete}
         onEdit={(item) => { setEditingBanner(item.raw as Banner); setIsModalOpen(true); }}
       />

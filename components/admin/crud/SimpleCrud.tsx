@@ -1,12 +1,11 @@
 'use client'
 
-import { FormEvent, useState, ReactNode } from "react";
+import { ReactNode } from "react";
 import { Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 type CrudField = {
   key: string;
@@ -16,9 +15,9 @@ type CrudField = {
 
 type CrudItem = {
   id: string;
-  values: Record<string, any>;
+  values: Record<string, ReactNode>;
   imageUrl?: string;
-  raw?: any;
+  raw?: unknown;
 };
 
 type SimpleCrudProps = {
@@ -27,30 +26,15 @@ type SimpleCrudProps = {
   itemLabel: string;
   fields: CrudField[];
   items?: CrudItem[];
+  loading?: boolean;
+  message?: {
+    type: "success" | "error";
+    text: string;
+  } | null;
   filterComponent?: ReactNode;
   onEdit?: (item: CrudItem) => void;
   onDelete?: (id: string) => void;
 };
-
-function buildInitialForm(fields: CrudField[]) {
-  const form: Record<string, string> = {};
-
-  for (const field of fields) {
-    form[field.key] = "";
-  }
-
-  return form;
-}
-
-function normalizeValues(values: Record<string, any>, fields: CrudField[]) {
-  const normalized: Record<string, string> = {};
-
-  for (const field of fields) {
-    normalized[field.key] = values[field.key]?.toString() ?? "";
-  }
-
-  return normalized;
-}
 
 export default function SimpleCrud({
   title,
@@ -58,6 +42,8 @@ export default function SimpleCrud({
   itemLabel,
   fields,
   items = [],
+  loading = false,
+  message,
   filterComponent,
   onEdit,
   onDelete,
@@ -77,6 +63,19 @@ export default function SimpleCrud({
         </CardHeader>
 
         <CardContent className="space-y-6">
+          {message ? (
+            <div
+              className={`rounded-md border px-4 py-3 text-sm ${
+                message.type === "success"
+                  ? "border-green-200 bg-green-50 text-green-800"
+                  : "border-red-200 bg-red-50 text-red-800"
+              }`}
+              role="status"
+            >
+              {message.text}
+            </div>
+          ) : null}
+
           {filterComponent ? (
             filterComponent
           ) : (
@@ -108,9 +107,13 @@ export default function SimpleCrud({
           <div className="border-t border-neutral-100" />
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {items.length === 0 ? (
+            {loading ? (
               <div className="col-span-full rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-8 text-center">
-                <p className="text-sm text-neutral-600">Nenhum registro cadastrado.</p>
+                <p className="text-sm text-neutral-600">Carregando registros...</p>
+              </div>
+            ) : items.length === 0 ? (
+              <div className="col-span-full rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-8 text-center">
+                <p className="text-sm text-neutral-600">Nenhum {itemLabel} cadastrado.</p>
               </div>
             ) : (
               items.map((item) => (
@@ -122,7 +125,7 @@ export default function SimpleCrud({
                     <div className="relative h-36 w-full overflow-hidden bg-neutral-100">
                       <img
                         src={item.imageUrl}
-                        alt={primaryFieldKey ? item.values[primaryFieldKey] : "Imagem"}
+                        alt={primaryFieldKey ? String(item.values[primaryFieldKey]) : "Imagem"}
                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>

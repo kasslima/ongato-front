@@ -299,14 +299,14 @@ export function AnimalModal({ isOpen, onClose, onSubmit, animal }: AnimalModalPr
             </p>
           </div>
 
-          <label className="flex cursor-pointer items-center gap-3 rounded-md border border-neutral-800 p-3">
+          <label className="flex cursor-pointer items-center gap-3 rounded-md border border-neutral-300 bg-neutral-50 p-3">
             <input
               type="checkbox"
               checked={formData.featured}
               onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-              className="h-4 w-4 accent-white"
+              className="h-4 w-4 accent-neutral-900"
             />
-            <span className="text-sm text-neutral-100">Exibir este animal como destaque</span>
+            <span className="text-sm text-neutral-900">Exibir este animal como destaque</span>
           </label>
 
           <DialogFooter>

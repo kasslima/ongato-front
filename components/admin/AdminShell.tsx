@@ -21,7 +21,7 @@ export default function AdminShell({ children }: AdminShellProps) {
   };
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultCollapsed>
       <AdminSidebar onLogout={handleLogout} />
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>

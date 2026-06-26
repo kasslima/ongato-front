@@ -7,21 +7,32 @@ import { getAnimals, deleteAnimal, createAnimal, updateAnimal } from "@/lib/anim
 import { Animal } from "@/types/animais";
 import { AnimalModal } from "./AnimalModal";
 
+type StatusMessage = {
+  type: "success" | "error";
+  text: string;
+};
+
 export default function AnimaisPage() {
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<{ name?: string; type?: "gato" | "cachorro" }>({});
+  const [message, setMessage] = useState<StatusMessage | null>(null);
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAnimal, setEditingAnimal] = useState<Animal | null>(null);
 
-  const fetchAnimals = async () => {
+  const fetchAnimals = async (showError = true) => {
     try {
       setLoading(true);
       const data = await getAnimals(filter);
       setAnimals(data);
+      return true;
     } catch (error) {
       console.error("Erro ao buscar animais:", error);
+      if (showError) {
+        setMessage({ type: "error", text: "Nao foi possivel carregar os animais." });
+      }
+      return false;
     } finally {
       setLoading(false);
     }
@@ -35,9 +46,16 @@ export default function AnimaisPage() {
     if (!confirm("Tem certeza que deseja excluir este animal?")) return;
     try {
       await deleteAnimal(Number(id));
-      fetchAnimals();
+      const refreshed = await fetchAnimals(false);
+      setMessage({
+        type: refreshed ? "success" : "error",
+        text: refreshed
+          ? "Animal excluido com sucesso."
+          : "Animal excluido, mas nao foi possivel atualizar a lista.",
+      });
     } catch (error) {
       console.error("Erro ao excluir animal:", error);
+      setMessage({ type: "error", text: error instanceof Error ? error.message : "Erro ao excluir animal." });
     }
   };
 
@@ -51,13 +69,22 @@ export default function AnimaisPage() {
     setIsModalOpen(true);
   };
 
-  const handleSubmit = async (data: FormData | Record<string, any>) => {
+  const handleSubmit = async (data: FormData | Record<string, unknown>) => {
+    const isEditing = Boolean(editingAnimal);
     if (editingAnimal) {
       await updateAnimal(editingAnimal.id, data);
     } else {
       await createAnimal(data as FormData);
     }
-    fetchAnimals();
+    const refreshed = await fetchAnimals(false);
+    setMessage({
+      type: refreshed ? "success" : "error",
+      text: refreshed
+        ? isEditing
+          ? "Animal atualizado com sucesso."
+          : "Animal cadastrado com sucesso."
+        : "Registro salvo, mas nao foi possivel atualizar a lista.",
+    });
   };
 
   const crudItems = animals.map((a) => ({
@@ -91,6 +118,8 @@ export default function AnimaisPage() {
           { key: "responsavel", label: "Idade", placeholder: "Ex: 1 ano" },
         ]}
         items={crudItems}
+        loading={loading}
+        message={message}
         onDelete={handleDelete}
         onEdit={(item) => handleOpenEdit(item.raw as Animal)}
       />

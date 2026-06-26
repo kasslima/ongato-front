@@ -1,11 +1,10 @@
 "use client";
 
-import { CalendarDays, Cat, Megaphone, Search, Users } from "lucide-react";
+import { CalendarDays, Cat, Megaphone, Users } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Sidebar,
   SidebarContent,
@@ -39,8 +38,6 @@ export default function AdminSidebar({ onLogout }: AdminSidebarProps) {
       </SidebarHeader>
 
       <SidebarContent>
-        <AdminSidebarSearch />
-
         <SidebarGroup>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -110,33 +107,6 @@ function AdminSidebarHeader() {
         </div>
         <SidebarTrigger className="absolute right-0 h-8 w-8 shrink-0 rounded-md transition-all duration-300" />
       </div>
-    </div>
-  );
-}
-
-function AdminSidebarSearch() {
-  const { collapsed } = useSidebar();
-
-  if (collapsed) {
-    return (
-      <button
-        type="button"
-        className="flex w-full items-center justify-center rounded-lg bg-neutral-900 px-3 py-2 text-neutral-300 hover:bg-neutral-800"
-        aria-label="Buscar"
-        title="Buscar"
-      >
-        <Search className="h-4 w-4" />
-      </button>
-    );
-  }
-
-  return (
-    <div className="relative">
-      <Search className="pointer-events-none absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
-      <Input
-        placeholder="Search"
-        className="h-9 border-neutral-800 bg-neutral-900 pl-8 text-neutral-100 placeholder:text-neutral-500 focus-visible:ring-neutral-700"
-      />
     </div>
   );
 }
