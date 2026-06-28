@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { createDonationCheckout } from "@/lib/donations";
 import { siteConfig } from "@/lib/site";
 
 type ImpactoDoacao = {
@@ -27,6 +28,7 @@ type ImpactoDoacao = {
   textIcone: string;
   faixa: string;
   detalhe: string;
+  amount?: number;
   destaque?: boolean;
   customizado?: boolean;
 };
@@ -42,6 +44,7 @@ const impactos: ImpactoDoacao[] = [
     textIcone: "text-[#7C3AED]",
     faixa: "from-[#7C3AED] to-[#9F67FF]",
     detalhe: "7 dias de ração",
+    amount: 50,
   },
   {
     id: 1,
@@ -53,6 +56,7 @@ const impactos: ImpactoDoacao[] = [
     textIcone: "text-[#FF7A29]",
     faixa: "from-[#FF7A29] to-[#FFB168]",
     detalhe: "Mais necessário",
+    amount: 150,
     destaque: true,
   },
   {
@@ -65,6 +69,7 @@ const impactos: ImpactoDoacao[] = [
     textIcone: "text-emerald-600",
     faixa: "from-emerald-500 to-teal-400",
     detalhe: "1 mês de abrigo",
+    amount: 300,
   },
 ];
 
@@ -73,6 +78,8 @@ export default function DoacaoCheckout() {
   const [metodoPagamento, setMetodoPagamento] = useState<"cartao" | "pix">("pix");
   const [valorCustomizado, setValorCustomizado] = useState("10");
   const [copiouPix, setCopiouPix] = useState(false);
+  const [checkoutCarregando, setCheckoutCarregando] = useState<number | null>(null);
+  const [erroCheckout, setErroCheckout] = useState("");
 
   const impactosCartao: ImpactoDoacao[] = [
     {
@@ -92,6 +99,7 @@ export default function DoacaoCheckout() {
 
   function selecionarMetodo(metodo: "cartao" | "pix") {
     setMetodoPagamento(metodo);
+    setErroCheckout("");
     if (metodo === "pix" && impactoSelecionado === -1) {
       setImpactoSelecionado(1);
     }
@@ -109,6 +117,38 @@ export default function DoacaoCheckout() {
 
   function copiarPix() {
     setCopiouPix(true);
+  }
+
+  function getAmountInCents(item: ImpactoDoacao) {
+    const amountInReais = item.customizado ? Number(valorCustomizado) : item.amount;
+
+    if (!Number.isFinite(amountInReais) || !amountInReais || amountInReais < 10) {
+      return 1000;
+    }
+
+    return Math.round(amountInReais * 100);
+  }
+
+  async function iniciarCheckoutCartao(item: ImpactoDoacao) {
+    const amount = getAmountInCents(item);
+
+    setImpactoSelecionado(item.id);
+    setErroCheckout("");
+    setCheckoutCarregando(item.id);
+
+    try {
+      const checkoutUrl = await createDonationCheckout(amount);
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      const message =
+        error instanceof TypeError || (error instanceof Error && error.message === "Failed to fetch")
+          ? "Ops, tivemos um erro ao iniciar sua doação. Tente novamente mais tarde."
+          : error instanceof Error
+            ? error.message
+            : "Ops, tivemos um erro ao iniciar sua doação. Tente novamente mais tarde.";
+      setErroCheckout(message);
+      setCheckoutCarregando(null);
+    }
   }
 
   return (
@@ -151,100 +191,115 @@ export default function DoacaoCheckout() {
         </div>
 
         {metodoPagamento === "cartao" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 items-stretch">
-            {impactosCartao.map((item) => {
-              const isSelected = impactoSelecionado === item.id;
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 items-stretch">
+              {impactosCartao.map((item) => {
+                const isSelected = impactoSelecionado === item.id;
+                const isLoading = checkoutCarregando === item.id;
 
-              return (
-                <div
-                  key={item.id}
-                  onClick={() => setImpactoSelecionado(item.id)}
-                  className={`group bg-white rounded-2xl shadow-sm border transition-all cursor-pointer flex flex-col relative overflow-hidden ${
-                    isSelected
-                      ? "border-[#FF7A29] ring-2 ring-[#FF7A29]/20 shadow-md"
-                      : "border-slate-100 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md"
-                  }`}
-                >
-                  <div className={`h-2 bg-gradient-to-r ${item.faixa}`} />
-                  <div className="p-5 sm:p-6 flex flex-col items-center text-center flex-1">
-                    <div className="flex items-center justify-between w-full mb-5">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                        {item.detalhe}
-                      </span>
-                      {item.destaque && (
-                        <span className="rounded-full bg-[#FF7A29] px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-white">
-                          Urgente
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => setImpactoSelecionado(item.id)}
+                    className={`group bg-white rounded-2xl shadow-sm border transition-all cursor-pointer flex flex-col relative overflow-hidden ${
+                      isSelected
+                        ? "border-[#FF7A29] ring-2 ring-[#FF7A29]/20 shadow-md"
+                        : "border-slate-100 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md"
+                    }`}
+                  >
+                    <div className={`h-2 bg-gradient-to-r ${item.faixa}`} />
+                    <div className="p-5 sm:p-6 flex flex-col items-center text-center flex-1">
+                      <div className="flex items-center justify-between w-full mb-5">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                          {item.detalhe}
+                        </span>
+                        {item.destaque && (
+                          <span className="rounded-full bg-[#FF7A29] px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-white">
+                            Urgente
+                          </span>
+                        )}
+                      </div>
+
+                      <div
+                        className={`w-12 h-12 ${item.bgIcone} ${item.textIcone} rounded-2xl flex items-center justify-center mb-4 shrink-0 transition-transform group-hover:scale-110`}
+                      >
+                        {item.icone}
+                      </div>
+
+                      <h3 className="font-bold text-slate-900 text-base mb-2 leading-snug">
+                        {item.titulo}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-500 mb-5 min-h-[58px]">
+                        {item.descricao}
+                      </p>
+
+                      {item.customizado ? (
+                        <div className="w-full mb-5">
+                          <label htmlFor="valor-customizado" className="sr-only">
+                            Valor customizado
+                          </label>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">
+                              R$
+                            </span>
+                            <Input
+                              id="valor-customizado"
+                              type="number"
+                              min={10}
+                              step={1}
+                              inputMode="numeric"
+                              value={valorCustomizado}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                setImpactoSelecionado(item.id);
+                              }}
+                              onChange={(event) => {
+                                setImpactoSelecionado(item.id);
+                                setValorCustomizado(event.target.value);
+                              }}
+                              onBlur={normalizarValorCustomizado}
+                              className="rounded-xl border-slate-200 py-5 pl-9 text-center text-lg font-bold focus-visible:ring-[#7C3AED]"
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <span
+                          className={`text-2xl font-bold mb-5 ${
+                            isSelected ? "text-[#FF7A29]" : "text-slate-800"
+                          }`}
+                        >
+                          {item.valor}
                         </span>
                       )}
-                    </div>
 
-                    <div
-                      className={`w-12 h-12 ${item.bgIcone} ${item.textIcone} rounded-2xl flex items-center justify-center mb-4 shrink-0 transition-transform group-hover:scale-110`}
-                    >
-                      {item.icone}
-                    </div>
-
-                    <h3 className="font-bold text-slate-900 text-base mb-2 leading-snug">
-                      {item.titulo}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-500 mb-5 min-h-[58px]">
-                      {item.descricao}
-                    </p>
-
-                    {item.customizado ? (
-                      <div className="w-full mb-5">
-                        <label htmlFor="valor-customizado" className="sr-only">
-                          Valor customizado
-                        </label>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">
-                            R$
-                          </span>
-                          <Input
-                            id="valor-customizado"
-                            type="number"
-                            min={10}
-                            step={1}
-                            inputMode="numeric"
-                            value={valorCustomizado}
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              setImpactoSelecionado(item.id);
-                            }}
-                            onChange={(event) => {
-                              setImpactoSelecionado(item.id);
-                              setValorCustomizado(event.target.value);
-                            }}
-                            onBlur={normalizarValorCustomizado}
-                            className="rounded-xl border-slate-200 py-5 pl-9 text-center text-lg font-bold focus-visible:ring-[#7C3AED]"
-                          />
-                        </div>
-                      </div>
-                    ) : (
-                      <span
-                        className={`text-2xl font-bold mb-5 ${
-                          isSelected ? "text-[#FF7A29]" : "text-slate-800"
+                      <Button
+                        type="button"
+                        variant={isSelected ? "default" : "outline"}
+                        disabled={checkoutCarregando !== null}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          iniciarCheckoutCartao(item);
+                        }}
+                        className={`mt-auto w-full rounded-xl transition-all font-semibold ${
+                          isSelected
+                            ? "bg-[#FF7A29] hover:bg-[#e66a1f] text-white border-none"
+                            : "border-[#7C3AED] text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white"
                         }`}
                       >
-                        {item.valor}
-                      </span>
-                    )}
-
-                    <Button
-                      variant={isSelected ? "default" : "outline"}
-                      className={`mt-auto w-full rounded-xl transition-all font-semibold ${
-                        isSelected
-                          ? "bg-[#FF7A29] hover:bg-[#e66a1f] text-white border-none"
-                          : "border-[#7C3AED] text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white"
-                      }`}
-                    >
-                      {isSelected ? "Selecionado" : "Selecionar"}
-                    </Button>
+                        {isLoading ? "Redirecionando..." : isSelected ? "Doar agora" : "Selecionar"}
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+
+            {erroCheckout && (
+              <p className="mt-5 text-center text-sm font-medium text-red-500">
+                {erroCheckout}
+              </p>
+            )}
+          </>
         ) : (
           <div className="max-w-xl mx-auto bg-white rounded-[32px] md:rounded-[40px] p-5 sm:p-8 md:p-10 shadow-sm border border-slate-100">
             <h2 className="text-xl md:text-2xl font-bold text-center text-slate-900 mb-6 md:mb-8">
